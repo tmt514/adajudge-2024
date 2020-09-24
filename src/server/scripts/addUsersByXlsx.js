@@ -96,19 +96,19 @@ const newUser = async (email, id, name, role, transporter) => {
   }
 
   const text = (
-    `Welcome to DSA2020, this email is to inform you that your DSA Judge account has been created.
+    `Welcome to ADA2020, this email is to inform you that your ADA Judge account has been created.
 Here is your account and temporary password. (You can change your password after logging in.)
 
 - Account: ${email}
 - Password: ${randPass}
 
-Head on to https://dsa.csie.org/ and try it!
+Head on to https://ada-judge.csie.ntu.edu.tw/ and try it!
 `);
 
   const mailOptions = {
-    from: '"dsa2020" <ta@dsa.csie.org >',
+    from: '"ada2020" <ada-ta@csie.ntu.edu.tw >',
     to: email,
-    subject: '[DSA2020]Your DSA Judge Account',
+    subject: '[ADA2020]Your ADA Judge Account',
     text
   };
   console.log(user);

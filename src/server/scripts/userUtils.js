@@ -77,19 +77,19 @@ const addUser = async (args, transporter) => {
 
 
     const text = (
-`Welcome to DS20, This email is just to inform you that your DSA Judge account is created.
+`Welcome to ADA2020, This email is just to inform you that your ADA Judge account is created.
 Here are your account and password.
 
 - Account: ${args.user}
 - Password: ${randPass}
 
-Head on to https://dsa.csie.org to try it !
+Head on to https://ada-judge.csie.ntu.edu.tw to try it !
 ` );
 
     const mailOptions = {
-        from: '"DSA2020" <ta@dsa.csie.org>',
+        from: '"ADA2020" <ada-ta@csie.ntu.edu.tw>',
         to: args.user,
-        subject: 'Your DSA Judge Account',
+        subject: 'Your ADA Judge Account',
         text,
     };
 
@@ -126,13 +126,13 @@ const resetUser = async (args, transporter) => {
 
 - Password: ${randPass}
 
-Head on to https://dsa.csie.org and change it.
+Head on to https://ada-judge.csie.ntu.edu.tw and change it.
 ` );
 
     const mailOptions = {
-        from: '"DSA2020" <ta@dsa.csie.org>',
+        from: '"ADA2020" <ada-ta@csie.ntu.edu.tw>',
         to: args.user,
-        subject: `[DSA2020]Password of your DSA Judge Account has been reset`,
+        subject: `[ADA2020]Password of your ADA Judge Account has been reset`,
         text,
     };
 
