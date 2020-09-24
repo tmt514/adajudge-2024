@@ -1,10 +1,10 @@
 component
   .ui.inverted.grid.computer.only
-    .top-menu.ui.inverted.fixed.top.secondary.pointing.teal.menu
+    .top-menu.ui.inverted.fixed.top.secondary.pointing.olive.menu
       .ui.inverted.container
         div.item.menu-font( style="color: #6dffff !important;" )
           i.terminal.icon
-          | DSA Judge
+          | ADA Judge
         a.item( v-link="{ path: '/', exact: true }" ) Home
         a.item( v-link="'/problems'" ) Problems
         a.item( v-if="user" v-link="'/submissions'" ) Submissions
@@ -19,7 +19,7 @@ component
           a.item( v-if="!user" @click="clickLogin" ) Login
 
   .ui.inverted.grid.mobile.only.tablet.only
-    .top-menu.ui.inverted.fixed.top.secondary.pointing.teal.menu
+    .top-menu.ui.inverted.fixed.top.secondary.pointing.olive.menu
       .ui.inverted.container
         .ui.inverted.simple.dropdown.item(style="border-color: rgba(0,0,0,.0)!important;")
           i.content.icon
@@ -34,5 +34,5 @@ component
             a.item( v-if="!user" @click="clickLogin" ) Login
         .item.menu-font( style="color: #6dffff !important;" )
           i.terminal.icon
-          | DSA Judge
+          | ADA Judge
         .item| {{(datetime-datetimebase+nowdatetime) | toFormattedTime 'MM/DD HH:mm:ss'}}
