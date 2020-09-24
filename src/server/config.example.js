@@ -11,7 +11,7 @@ export default {
         isolate: "/dev/shm/isolate",
     },
     mongo: {
-        url: 'mongodb://localhost/dsajudge',
+        url: 'mongodb://localhost/adajudge',
     },
     numa: true,
     numaPool: [{cpu:0,mem:0},{cpu:1,mem:1}],

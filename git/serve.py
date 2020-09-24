@@ -101,7 +101,7 @@ def serve(
             fin=False
             while not fin:
                 fin=True
-                r = requests.post("https://dsa.csie.org/submission/get/gitHash",json=data)
+                r = requests.post("https://ada-judge.csie.ntu.edu.tw/submission/get/gitHash",json=data)
                 print("\033[s------------------------------------\033[K")
                 line=1
                 try:
@@ -270,7 +270,7 @@ class Main(app.App):
                 fin=False
                 while not fin:
                     fin=True
-                    r = requests.post("https://dsa.csie.org/submission/get/last",json=data)
+                    r = requests.post("https://ada-judge.csie.ntu.edu.tw/submission/get/last",json=data)
                     print("------------------------------------\033[K")
                     line=1
                     try:
