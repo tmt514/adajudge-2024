@@ -123,7 +123,7 @@ export default class Judger {
     return async (compileBoxId) => {
       await reset(compileBoxId);
       this.rootDir = path.join(isolateDir, compileBoxId.toString(), 'box');
-      await copyToDir(this.userCpp, this.rootDir, 'user.c', compileBoxId);
+      await copyToDir(this.userCpp, this.rootDir, 'user.cpp', compileBoxId);
       const exFile = this.problem.compileEXFile || [];
       for (const file of exFile) {
         await copyToDir(path.join(this.problemDir, file), this.rootDir, file, compileBoxId);
@@ -132,9 +132,9 @@ export default class Judger {
       for (const file of exHeader) {
         await copyToDir(path.join(this.problemDir, file), this.rootDir, file, compileBoxId);
       }
-      const linkArg = [].concat(GCCLink, this.problem.compileEXLink || []);
-      const gccArg = [].concat(GCC, this.problem.compileEXArg || []);
-      const files = [].concat('user.c', exFile);
+      const linkArg = [].concat(GPPLink, this.problem.compileEXLink || []);
+      const gccArg = [].concat(GPP, this.problem.compileEXArg || []);
+      const files = [].concat('user.cpp', exFile);
       const result = await compile(compileBoxId, files, 'user', gccArg, linkArg);
       if (result.RE || result.SE || result.TLE) {
         saveResult(this.result, 'CE');
