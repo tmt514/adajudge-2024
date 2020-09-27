@@ -50,12 +50,12 @@
           .four.wide.field
             label Quota
             input(type="text" v-model="problem.quota") 
-        .four.fields
+        .three.fields
           .field
             .ui.inverted.toggle.checkbox
               input(type="checkbox" v-model="problem.visible")
               label Visible to non-admin
-          .field
+          //.field
             .ui.inverted.toggle.checkbox
               input(type="checkbox" v-model="problem.notGitOnly")
               label Allow submit without git
