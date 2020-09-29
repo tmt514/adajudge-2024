@@ -4,7 +4,7 @@
 cd -P "$(dirname "$0")"
 backup_dir=../backup
 DATE=`date +%Y%m%d-%H%M%S`
-root_dir=$backup_dir/$DATE
+root_dir=$backup_dir/all_$DATE
 submissions_dir=./submissions
 homeworks_dir=./homeworks
 problems_dir=./problems
@@ -25,5 +25,5 @@ tar -zcf $root_dir/dist.static.tar.gz $dist_static_dir
 tar -zcf $root_dir/semantic.src.tar.gz $semantic_src_dir
 tar -zcf $root_dir/apache2.config.tar.gz $apache2_config_dir
 cp $config_file $root_dir/
-#gdrive upload -r $root_dir
-gdrive sync upload $backup_dir 175ohpqrGDKRqNQc2GNVNu6m06iMSeOlj
+# rclone sync /home/ada2018/backup adajudge_backup:  --drive-root-folder-id aabbcc
+

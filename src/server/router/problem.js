@@ -54,7 +54,7 @@ router.get('/', wrap(async (req, res) => {
       }
     },
     { $project: { _id: 1, 'userRes.AC': 1, 'userRes.points': 1, quota: 1, name: 1, visible: 1 } }
-  ]);
+  ]).sort('_id');
   res.send(data);
 }));
 
