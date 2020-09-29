@@ -18,7 +18,7 @@ mongoose.Promise = Promise;
 const MongoStore = require('connect-mongo')(expressSession); 
 const app = express();
 app.use('/static',express.static('static'));
-app.use(express.static('static'));
+app.use(express.static('static', { maxAge: '1h' }));
 app.use(cookieParser());
 app.use(expressSession({
     secret: config.secret,
