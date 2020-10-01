@@ -13,8 +13,8 @@ const userSchema = Schema({
     type: String,
     required: true
   },
-  ssh_key: String,
-  git_upload_key: String,
+  //ssh_key: String,
+  //git_upload_key: String,
   meta: {
     name: String,
     id: String
