@@ -101,7 +101,8 @@ router.get('/sourceCode/:id', requireLogin, wrap(async (req, res) => {
 
   if (!submission) return res.status(404).send(`Submission ${id} not found.`);
   if (!(req.user && (req.user.isAdmin() || req.user.isTA())) &&
-        !((submission.submittedBy.equals(req.user._id) && submission.problem.visible && submission.problem.notGitOnly) || submission.problem.resource.includes('solution'))) {
+        !((submission.submittedBy.equals(req.user._id) && submission.problem.visible) || submission.problem.resource.includes('solution'))) {
+        //!((submission.submittedBy.equals(req.user._id) && submission.problem.visible && submission.problem.notGitOnly) || submission.problem.resource.includes('solution'))) {
     return res.status(403).send('Permission denided.');
   }
   if (req.query.format) {
@@ -221,6 +222,7 @@ router.post('/get/last', requireKey, wrap(async (req, res) => {
   }
 }));
 
+/*
 router.post('/get/gitHash', requireKey, wrap(async (req, res) => {
   const user = req.user;
   const isTA = user && (user.isAdmin() || user.isTA());
@@ -287,5 +289,6 @@ router.post('/get/gitHash', requireKey, wrap(async (req, res) => {
     }
   }
 }));
+*/
 
 export default router;

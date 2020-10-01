@@ -30,7 +30,7 @@
             td.collapsing Submitted by
             td {{ submission.submittedBy.meta.name }} ({{ submission.submittedBy.meta.id }})
               | {{ submission.submittedBy.email ? ' - ' + submission.submittedBy.email : '' }}
-          tr
+          //tr
             td.collapsing Git Commit Hash
             td {{ submission.gitCommitHash ? submission.gitCommitHash : '' }}
           tr
@@ -88,6 +88,8 @@
                     td.collapsing {{ test.runtime }}
                     td.collapsing.center.aligned -
 
-  h2.ui.inverted.dividing.header( v-if="(user&&(user.isAdmin||user.isTA||submission.problem.notGitOnly))||submission.problem.resource.includes('solution')" ) Source Code
-  #editor( v-if="(user&&(user.isAdmin||user.isTA||submission.problem.notGitOnly))||submission.problem.resource.includes('solution')" )
+  h2.ui.inverted.dividing.header Source Code
+  #editor
+  //h2.ui.inverted.dividing.header( v-if="(user&&(user.isAdmin||user.isTA||submission.problem.notGitOnly))||submission.problem.resource.includes('solution')" ) Source Code
+  //#editor( v-if="(user&&(user.isAdmin||user.isTA||submission.problem.notGitOnly))||submission.problem.resource.includes('solution')" )
 
