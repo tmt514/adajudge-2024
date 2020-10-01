@@ -34,6 +34,7 @@ async function updateProblemByGzip (id, file) {
     // remove the directory and create a new one
     await fs.remove(destDir);
     await fs.mkdir(destDir);
+    logger.info(`extract ${file} ${file.path} to ${destDir}`);
     // extract the archive to destination directory
     await tar.extract({gzip: true, cwd: destDir, file: file.path, strip: 1});
   } finally {

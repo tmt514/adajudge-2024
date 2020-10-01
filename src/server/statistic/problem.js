@@ -37,9 +37,18 @@ export async function getProblemResultStats(problemID) {
 export async function getProblemResultBucket(problemID) {
     const res = await Submission.aggregate([
         {
+            $lookup: {
+                from: 'users',
+                localField: 'submittedBy',
+                foreignField: '_id',
+                as: '_user',
+            },
+        },
+        {
             $match: {
-                'status': { $nin: ['pending', 'judging'] },
                 'problem': problemID,
+                '_user.roles': 'student',
+                'status': { $nin: ['pending', 'judging'] },
             },
         },
         {
