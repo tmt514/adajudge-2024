@@ -9,6 +9,7 @@ $.fn.form.settings.rules.emptyOrMinLength = function(value, length) {
 };
 
 const formValidateObj = {
+  /*
     'new-sshkey': {
         identifier: 'new-sshkey',
         rules: [
@@ -18,6 +19,7 @@ const formValidateObj = {
             },
         ],
     },
+    */
     'new-password': {
         identifier: 'new-password',
         rules: [

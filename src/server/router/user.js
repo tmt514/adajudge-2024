@@ -35,7 +35,7 @@ router.get('/me', (req, res) => {
     user.submission_limit = req.user.submission_limit;
     user.roles = req.user.roles;
     user.email = req.user.email;
-    user.ssh_key = req.user.ssh_key;
+    //user.ssh_key = req.user.ssh_key;
     user.homeworks = req.user.homeworks;
     res.send({
       login: true,
@@ -68,6 +68,7 @@ router.post('/changePassword', requireLogin, wrap(async (req, res) => {
     }
     // res.send(`Password changed successfully.`);
   }
+  /*
   let newSshKey = req.body['new-sshkey'];
   const newSshKeys = newSshKey.trim().replace(/\n/g, '').split(' ').filter(s => s !== ' ');
   let changeSshKey = false;
@@ -126,6 +127,12 @@ router.post('/changePassword', requireLogin, wrap(async (req, res) => {
     res.send('Password changed successfully.');
   } else if (changeSshKey) {
     res.send('SSH Key changed successfully.');
+  } else {
+    res.send('Nothing changed.');
+  }
+  */
+  if (changePassword) {
+    res.send('Password changed successfully.');
   } else {
     res.send('Nothing changed.');
   }
