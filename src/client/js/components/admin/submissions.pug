@@ -27,6 +27,13 @@
             option( value="SE" ) Security Error (SE)
             option( value="CE" ) Compile Error (CE)
             option( value="JE" ) Judge Error (JE)
+      .ui.inverted.vertical.fluid.menu
+        .item
+          h4.ui.inverted.header Rejudge Selected Submissions
+          button.ui.inverted.right.labeled.icon.red.button.spaced(
+            @click.prevent="rejudgeSubmissions" )
+            i.refresh.icon
+            | Rejudge Submissions
       .ui.inverted.pagination.menu
         a.item( v-for="idx of tabRange", :class="{active: idx == curTabId}", @click="changeTab(idx)" ) 
           | {{ idx }}
