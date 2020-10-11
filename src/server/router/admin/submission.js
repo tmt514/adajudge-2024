@@ -56,11 +56,14 @@ router.get('/', wrap(async (req, res) => {
 router.get('/:id/rejudge', wrap(async (req, res) => {
     if(isNaN(req.params.id))return res.status(400).send(`id must be a number`);
 
-    let sub = await Submission.findById(req.params.id);
+    let sub = await Submission.findOneAndUpdate(
+      {'_id': req.params.id},
+      {
+        $set: {'status': 'pending', 'result': null},
+        $unset: {'runtime': ''}
+      }
+    );
     if (!sub) return res.status(404).send(`Submission #${req.params.id} not found`);
-
-    sub.status = 'pending';
-    await sub.save();
 
     res.send(`Submission #${req.params.id} rejudged.`);
 }));

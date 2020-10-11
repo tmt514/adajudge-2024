@@ -178,11 +178,14 @@ router.post('/:id/rejudge', wrap(async (req, res) => {
   try {
     await Submission.update(
       {problem: req.params.id},
-      {$set: {status: 'pending'}},
+      {
+        $set: {'status': 'pending', 'result': null},
+        $unset: {'runtime': ''}
+      },
       {multi: true}
     );
   } catch (e) {
-    logger.error(e);
+    logger.error(`router /${req.params.id}/rejudge failed with error ${e}`);
   }
 
   res.send(`Successfully rejudge problem #${req.params.id}!`);
