@@ -79,6 +79,34 @@ export default Vue.extend({
             toastr.success(result.body);
             this.getSubmissions();
         },
+        async rejudgeSubmissions() {
+            let result;
+            const params = { skipPage: -1 };
+            const filter = this.filter;
+            if (filter.result != 'ALL') params.result = filter.result;
+            if (filter.probID) params.probID = filter.probID;
+            if (filter.user) params.user = filter.user;
+            try {
+                result = await this.$http.get('/admin/submission/', { params });
+            } catch(e) {
+                console.log(e);
+                return;
+            }
+
+            toastr.success(`${result.data.length} submissions rejudged`);
+
+            await (() => {
+                result.data.forEach((sub) => {
+                    try {
+                        result = this.$http.get(`/admin/submission/${sub._id}/rejudge`);
+                    } catch(e) {
+                        if (e.body) toastr.error(e.body);
+                        else console.log(e);
+                    }
+                });
+            })();
+            this.getSubmissions();
+        },
         async queryChanged() {
             const query = {};
             _.assignIn(query, this.filter);
