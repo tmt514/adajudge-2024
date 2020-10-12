@@ -79,9 +79,9 @@ export default Vue.extend({
             toastr.success(result.body);
             this.getSubmissions();
         },
-        async rejudgeSubmissions() {
+        async rejudgeSubmissions(pageId) {
             let result;
-            const params = { skipPage: -1 };
+            const params = { skipPage: pageId };
             const filter = this.filter;
             if (filter.result != 'ALL') params.result = filter.result;
             if (filter.probID) params.probID = filter.probID;
@@ -95,16 +95,14 @@ export default Vue.extend({
 
             toastr.success(`${result.data.length} submissions rejudged`);
 
-            await (() => {
-                result.data.forEach((sub) => {
-                    try {
-                        result = this.$http.get(`/admin/submission/${sub._id}/rejudge`);
-                    } catch(e) {
-                        if (e.body) toastr.error(e.body);
-                        else console.log(e);
-                    }
-                });
-            })();
+            for (let i = 0 ; i < result.data.length ; i++) {
+                try {
+                    await this.$http.get(`/admin/submission/${result.data[i]._id}/rejudge`);
+                } catch(e) {
+                    if (e.body) toastr.error(e.body);
+                    else console.log(e);
+                }
+            }
             this.getSubmissions();
         },
         async queryChanged() {

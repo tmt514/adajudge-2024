@@ -31,9 +31,15 @@
         .item
           h4.ui.inverted.header Rejudge Selected Submissions
           button.ui.inverted.right.labeled.icon.red.button.spaced(
-            @click.prevent="rejudgeSubmissions" )
+            @click.prevent="rejudgeSubmissions(-1)" )
             i.refresh.icon
             | Rejudge Submissions
+        //-.item
+          h4.ui.inverted.header Rejudge Submissions on this page
+          button.ui.inverted.right.label.icon.red.button.sapced(
+            @click.prevent="rejudgeSubmissions(curTabId)" )
+            i.refresh.icon
+            | Rejudge Page
       .ui.inverted.pagination.menu
         a.item( v-for="idx of tabRange", :class="{active: idx == curTabId}", @click="changeTab(idx)" ) 
           | {{ idx }}
