@@ -79,9 +79,9 @@ export default Vue.extend({
             toastr.success(result.body);
             this.getSubmissions();
         },
-        async rejudgeSubmissions() {
+        async rejudgeSubmissions(pageId) {
             let result;
-            const params = { skipPage: -1 };
+            const params = { skipPage: pageId };
             const filter = this.filter;
             if (filter.result != 'ALL') params.result = filter.result;
             if (filter.probID) params.probID = filter.probID;
