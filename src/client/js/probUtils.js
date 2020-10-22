@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 const RESULT_MAP = {
+    'PE': 'Presentation Error',
     'JE': 'Judge Error',
     'TLE': 'Time Limit Exceeded',
     'WA': 'Wrong Answer',

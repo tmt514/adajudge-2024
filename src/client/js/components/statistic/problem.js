@@ -71,6 +71,7 @@ export default Vue.extend({
                 RE: [220, 100, 0],
                 SE: [150, 150, 150],
                 JE: [0, 0, 0],
+                PE: [204, 204, 0]
             };
             const [labelNames, color] = _.zip(..._.toPairs(labels));
             const backgroundColor = _.map(color, x => `rgba(${x[0]}, ${x[1]}, ${x[2]}, 0.6)`);

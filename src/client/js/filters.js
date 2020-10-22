@@ -6,6 +6,7 @@ Vue.filter('toFormattedTime', (val, fmt) => moment(val).tz('Asia/Taipei').format
 Vue.filter('toResultString', (val) => {
     if (val === 'pending' || val === 'judging') return val;
     return {
+        'PE': 'Presentation Error',
         'JE': 'Judge Error',
         'TLE': 'Time Limit Exceeded',
         'WA': 'Wrong Answer',
