@@ -30,10 +30,6 @@ const schema = Schema({
     type: Boolean,
     default: false
   },
-  notGitOnly: {
-    type: Boolean,
-    default: true
-  },
   showStatistic: {
     type: Boolean,
     default: true

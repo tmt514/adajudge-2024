@@ -9,17 +9,6 @@ $.fn.form.settings.rules.emptyOrMinLength = function(value, length) {
 };
 
 const formValidateObj = {
-  /*
-    'new-sshkey': {
-        identifier: 'new-sshkey',
-        rules: [
-            {
-                type: 'emptyOrMinLength[100]',
-                prompt: `SSH key too short`,
-            },
-        ],
-    },
-    */
     'new-password': {
         identifier: 'new-password',
         rules: [
@@ -48,10 +37,6 @@ const formValidateObj = {
         ],
     },
 };
-
-const formGitValidateObj = {
-};
-
 
 export default Vue.extend({
     data() {

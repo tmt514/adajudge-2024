@@ -8,13 +8,9 @@ root_dir=$backup_dir/$DATE
 submissions_dir=./submissions
 homeworks_dir=./homeworks
 problems_dir=./problems
-git_dir=/home/git/repositories
-gitosis_admin=./gitosis-admin
 mkdir -p $root_dir
 mongodump --archive=$root_dir/adajudge.${DATE}.gz --gzip --db adajudge
 tar -zcf $root_dir/submissions.tar.gz $submissions_dir
 tar -zcf $root_dir/homeworks.tar.gz $homeworks_dir
-tar -zcf $root_dir/git.tar.gz $git_dir
 tar -zcf $root_dir/problems.tar.gz $problems_dir/*/prob.md
-tar -zcf $root_dir/gitosis_admin.tar.gz $gitosis_admin
 #rclone sync /home/ada2018/backup adajudge_backup:  --drive-root-folder-id aabbcc

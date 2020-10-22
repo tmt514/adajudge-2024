@@ -5,7 +5,7 @@ import _ from 'lodash';
 import config from '/config';
 import path from 'path';
 import User from '/model/user';
-import { requireLogin, requireKey } from '/utils';
+import { requireLogin } from '/utils';
 import fs from 'fs-extra';
 import Problem from '/model/problem';
 import Result from '/model/result';
@@ -102,7 +102,6 @@ router.get('/sourceCode/:id', requireLogin, wrap(async (req, res) => {
   if (!submission) return res.status(404).send(`Submission ${id} not found.`);
   if (!(req.user && (req.user.isAdmin() || req.user.isTA())) &&
         !((submission.submittedBy.equals(req.user._id) && submission.problem.visible) || submission.problem.resource.includes('solution'))) {
-        //!((submission.submittedBy.equals(req.user._id) && submission.problem.visible && submission.problem.notGitOnly) || submission.problem.resource.includes('solution'))) {
     return res.status(403).send('Permission denided.');
   }
   if (req.query.format) {
@@ -124,7 +123,7 @@ router.get('/:id', requireLogin, wrap(async (req, res) => {
   const id = req.params.id;
   let submission;
   submission = await Submission.findById(id)
-    .populate('problem', 'name testdata.points resource visible notGitOnly showDetailSubtask')
+    .populate('problem', 'name testdata.points resource visible showDetailSubtask')
     .populate('submittedBy', (req.user.isAdmin() ? 'email meta' : 'meta'))
     .populate({
       path: '_result',
@@ -164,131 +163,5 @@ router.get('/:id', requireLogin, wrap(async (req, res) => {
 
   res.send(submission);
 }));
-
-router.post('/get/last', requireKey, wrap(async (req, res) => {
-  const isTA = req.user && (req.user.isAdmin() || req.user.isTA());
-  let data = await Submission.aggregate([
-    { $match: { submittedBy: req.user._id } },
-    {
-      $lookup: {
-        from: Problem.collection.name,
-        as: 'problem',
-        let: { problem: '$problem' },
-        pipeline: [
-          {
-            $match: {
-              ...(isTA ? {} : { visible: true }),
-              $expr: {
-                $eq: ['$$problem', '$_id']
-              }
-            }
-          }, {
-            $limit: 1
-          }
-        ]
-      }
-    },
-    { $unwind: '$problem' },
-    { $sort: { _id: -1 } },
-    { $limit: 1 }
-  ]);
-
-  if (data.length === 0) {
-    res.send({});
-  } else {
-    data = await Result.populate(data[0], {
-      path: '_result',
-      populate: {
-        path: 'subresults',
-        select: '-_id -__v',
-        populate: {
-          path: 'subresults',
-          select: '-_id -__v -subresults -maxPoints -points'
-        }
-      }
-    });
-    if (!isTA && !data.problem.visible) {
-      return res.status(403).send('Permission denided.');
-    } else {
-      if (!data.problem.showDetailSubtask && !isTA) {
-        if (data._result && data._result.subresults) {
-          for (const subresult of data._result.subresults) {
-            subresult.subresults = [];
-          }
-        }
-      }
-      res.send(data);
-    }
-  }
-}));
-
-/*
-router.post('/get/gitHash', requireKey, wrap(async (req, res) => {
-  const user = req.user;
-  const isTA = user && (user.isAdmin() || user.isTA());
-  const smallerHash = req.body.gitHash.toLowerCase();
-  const biggerHash = smallerHash.substr(0, smallerHash.length - 1) + String.fromCharCode(smallerHash.charCodeAt(smallerHash.length - 1) + 1);
-  let data = await Submission.aggregate([
-    {
-      $match: {
-        submittedBy: req.user._id,
-        gitCommitHash: {
-          $gte: smallerHash,
-          $lt: biggerHash
-        }
-      }
-    },
-    {
-      $lookup: {
-        from: Problem.collection.name,
-        as: 'problem',
-        let: { problem: '$problem' },
-        pipeline: [
-          {
-            $match: {
-              ...(isTA ? {} : { visible: true }),
-              $expr: {
-                $eq: ['$$problem', '$_id']
-              }
-            }
-          }, {
-            $limit: 1
-          }
-        ]
-      }
-    },
-    { $unwind: '$problem' },
-    { $sort: { _id: -1 } },
-    { $limit: 1 }
-  ]);
-  if (data.length === 0) {
-    res.send('Submission Not Found!');
-  } else {
-    data = await Result.populate(data[0], {
-      path: '_result',
-      populate: {
-        path: 'subresults',
-        select: '-_id -__v',
-        populate: {
-          path: 'subresults',
-          select: '-_id -__v -subresults -maxPoints -points'
-        }
-      }
-    });
-    if (!isTA && !data.problem.visible) {
-      return res.status(403).send('Permission denided.');
-    } else {
-      if (!data.problem.showDetailSubtask && !isTA) {
-        if (data._result && data._result.subresults) {
-          for (const subresult of data._result.subresults) {
-            subresult.subresults = [];
-          }
-        }
-      }
-      res.send([data]);
-    }
-  }
-}));
-*/
 
 export default router;
