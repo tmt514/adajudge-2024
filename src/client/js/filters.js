@@ -13,7 +13,6 @@ Vue.filter('toResultString', (val) => {
         'CE': 'Compile Error',
         'RE': 'Runtime Error',
         'SE': 'Security Error',
-        'GE': 'Git Error'
     }[val];
 });
 Vue.filter('toFixed', (val, fx=2) => {

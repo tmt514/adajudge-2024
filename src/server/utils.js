@@ -4,24 +4,6 @@ import Homework from '/model/homework';
 import _ from 'lodash';
 import wrap from 'express-async-wrap';
 
-export const requireKey = wrap(async (req, res, next) => {
-  if ((!req.user || !req.user.isAdmin()) && !req.body.key) return res.status(401).send('Please use "git" to submit!');
-  // eslint-disable-next-line require-atomic-updates
-  if (!req.user) req.user = await User.findOne({git_upload_key: req.body.key});
-  if (!req.user) return res.status(403).send('User not found!');
-  next();
-});
-export const checkKey = wrap(async (req, res, next) => {
-  if (!req.user && !req.body.key) return res.status(401).send('Please use "git" to submit!');
-  // eslint-disable-next-line require-atomic-updates
-  if (!req.user) req.user = await User.findOne({git_upload_key: req.body.key});
-  if (!req.user) return res.status(403).send('User not found!');
-  next();
-});
-export const requireKeyOrNotGit = (req, res, next) => {
-  if ((!req.user || !req.user.isAdmin()) && !req.body.key && (!req.problem || !req.problem.notGitOnly)) return res.status(401).send('Please use "git" to submit!');
-  next();
-};
 export const requireLogin = (req, res, next) => {
   if (!req.user) return res.status(401).send(`You are not logged in`);
   next();

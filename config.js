@@ -30,7 +30,6 @@ const CONFIG = {
     'problems',
     'submissions',
     'homeworks',
-//    'gitosis-admin'
   ],
   cfiles: 'src/server/cfiles'
 };
