@@ -226,7 +226,7 @@ export default class Judger {
           await saveResult(testResult, 'SE');
           return;
         }
-        if (userRes.RE) {
+        if (userRes.RE || userRes.PE || userRes.FAIL) {
           await saveResult(testResult, 'RE');
           return;
         }
@@ -251,7 +251,12 @@ export default class Judger {
         if (checkerRes.TLE) {
           throw new Error('Judge Error: Checker TLE.');
         }
-        if (checkerRes.RE || checkerRes.SE) {
+        if (checkerRes.FAIL) {
+          throw new Error('Checker failed with exit code 3 (_fail)');
+        }
+        if (checkerRes.PE) {
+          await saveResult(testResult, 'PE');
+        } else if (checkerRes.RE || checkerRes.SE) {
           await saveResult(testResult, 'WA');
         } else {
           await saveResult(testResult, 'AC', SCORE_FACTOR);

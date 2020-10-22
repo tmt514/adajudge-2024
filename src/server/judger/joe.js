@@ -180,7 +180,11 @@ export async function run (worker_id, exec, inFile, outFile, errFile, timeLimit,
   let result = await isolateWrap(_opt, worker_id);
   let fl = await fs.readFile(path.join(metaDir, worker_id.toString()));
   result = _.assignIn(result, YAML.parse('---\n' + fl.toString().replace(/:/g, ': ') + '...\n'));
-  if (result.status == 'RE') { result.RE = true; }
+  if (result.status == 'RE') { 
+    if (result.exitcode == 2) { result.PE = true; }
+    else if (result.exitcode == 3) { result.FAIL = true; }
+    else { result.RE = true; }
+  }
   if (result.status == 'SG') {
     if (result.message.endsWith(' 31')) { result.SE = true; } else { result.RE = true; }
   }
