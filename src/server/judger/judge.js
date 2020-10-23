@@ -18,8 +18,9 @@ const SCORE_FACTOR = 100;
 const AC_SCORE = 100;
 
 const resultMap = {
-  CE: 100000,
-  RE: 10000,
+  CE: 1000000,
+  RE: 100000,
+  PE: 10000,
   WA: 1000,
   TLE: 100,
   AC: 1
