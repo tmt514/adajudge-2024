@@ -6,7 +6,7 @@ component
           i.terminal.icon
           | ADA Judge
         a.item( v-link="{ path: '/', exact: true }" ) Home
-        a.item( v-link="'/problems'" ) Problems
+        a.item( v-if="user" v-link="'/problems'" ) Problems
         a.item( v-if="user" v-link="'/submissions'" ) Submissions
         //-a.item Resource
         a.item( v-if="user && user.isAdmin" v-link="{name: 'admin'}" ) Admin
@@ -25,7 +25,7 @@ component
           i.content.icon
           .ui.inverted.menu(style="margin-top: 0px; background: #1b1b1b;")
             a.item( v-link="{ path: '/', exact: true }" ) Home
-            a.item( v-link="'/problems'" ) Problems
+            a.item( v-if="user" v-link="'/problems'" ) Problems
             a.item( v-if="user" v-link="'/submissions'" ) Submissions
             //-a.item Resource
             a.item( v-if="user && user.isAdmin" v-link="{name: 'admin'}" ) Admin
