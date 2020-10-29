@@ -11,9 +11,10 @@ import { checkProblem } from '/utils';
 const router = express.Router();
 
 router.get('/', wrap(async (req, res) => {
+  const isUser = req.user;
   const isTA = req.user && (req.user.isAdmin() || req.user.isTA());
   const data = await Problem.aggregate([
-    { $match: isTA ? {} : { visible: true } },
+    { $match: isUser ? (isTA ? {} : { visible: true }) : { _id: -2 } }, // no problem has _id == -2 => can't see problem when not logged in
     {
       $project: {
         _id: 1, quota: 1, name: 1, visible: 1
