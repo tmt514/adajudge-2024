@@ -64,7 +64,12 @@ router.get('/:id', wrap(async (req, res) => {
   const id = parseInt(req.params.id);
   if (isNaN(id)) return res.sendStatus(404);
   let problem;
-  if (req.user && (req.user.isAdmin() || req.user.isTA())) { problem = await Problem.findOne({ _id: id }); } else { problem = await Problem.findOne({ _id: id, visible: true }); }
+  if (req.user) {
+    if (req.user.isAdmin() || req.user.isTA()) problem = await Problem.findOne({ _id: id });
+    else problem = await Problem.findOne({ _id: id, visible: true });
+  } else {
+    return res.sendStatus(404); // can't view problem when not logged in
+  }
 
   if (!problem) {
     return res.sendStatus(404);
