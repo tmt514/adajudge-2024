@@ -179,6 +179,14 @@ export async function run (worker_id, exec, inFile, outFile, errFile, timeLimit,
 
   let result = await isolateWrap(_opt, worker_id);
   let fl = await fs.readFile(path.join(metaDir, worker_id.toString()));
+  if (outFile) {
+    let out = await fs.readFile(path.join(config.dirs.isolate, worker_id.toString(), 'box', outFile));
+    result.out = out;
+  }
+  if (errFile) {
+    let err = await fs.readFile(path.join(config.dirs.isolate, worker_id.toString(), 'box', errFile));
+    result.err = err;
+  }
   result = _.assignIn(result, YAML.parse('---\n' + fl.toString().replace(/:/g, ': ') + '...\n'));
   if (result.status == 'RE') { 
     if (result.exitcode == 2) { result.PE = true; }

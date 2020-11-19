@@ -30,6 +30,14 @@ const schema = Schema({
     type: Boolean,
     default: false
   },
+  hasPartialScorePerTestdata: {
+    type: Boolean,
+    default: false
+  },
+  showScoreboard: {
+    type: Booleanm
+    default: false
+  },
   showStatistic: {
     type: Boolean,
     default: true
