@@ -35,7 +35,7 @@ const schema = Schema({
     default: false
   },
   showScoreboard: {
-    type: Booleanm
+    type: Boolean,
     default: false
   },
   showStatistic: {

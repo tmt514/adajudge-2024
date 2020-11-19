@@ -10,6 +10,7 @@ import Diff from './components/diff';
 import Home from './components/home';
 import Profile from './components/profile';
 import ProblemStatistic from './components/statistic/problem';
+import ProblemScoreboard from './components/scoreboard/problem';
 import HomeworkStatistic from './components/statistic/homework';
 
 Vue.use(VueRouter);
@@ -33,6 +34,10 @@ router.map({
     '/problem/:id/statistic': {
         name: 'problem.statistic',
         component: ProblemStatistic,
+    },
+    '/problem/:id/scoreboard': {
+        name: 'problem.scoreboard',
+        component: ProblemScoreboard,
     },
     '/homework/:id/statistic': {
         name: 'homework.statistic',

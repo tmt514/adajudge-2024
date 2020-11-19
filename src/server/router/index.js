@@ -6,6 +6,7 @@ const routes = [
     'admin',
     'homework',
     'statistic',
+    'scoreboard',
     'time',
 ];
 
