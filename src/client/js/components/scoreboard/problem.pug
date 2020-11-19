@@ -29,6 +29,7 @@
             th.collapsing.center.aligned ID
             th By
             th Score
+            th Submitted Time
         tbody
           tr( v-for="sub in (stats.highest?stats.highest:[])"
               v-link="problem.solutionVisible ? {name: 'submission', params: {id: sub._id}} : null" )
@@ -36,5 +37,6 @@
             td.collapsing.center.aligned( :class="{ 'blue-link': problem.solutionVisible }" ) {{ sub._id }}
             td {{ _.get(sub, 'submittedBy.meta.name', '') }} ({{ _.get(sub, 'submittedBy.meta.id') }})
             td {{ sub.points }}
+            td {{ probUtils.parseMongoTime(sub.ts) }}
           
 
