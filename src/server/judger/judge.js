@@ -260,7 +260,11 @@ export default class Judger {
         } else if (checkerRes.RE || checkerRes.SE) {
           await saveResult(testResult, 'WA');
         } else {
-          await saveResult(testResult, 'AC', SCORE_FACTOR);
+          if (this.problem.hasPartialScorePerTestdata) {
+            await saveResult(testResult, 'AC', parseFloat(checkerRes.out) * SCORE_FACTOR);
+          } else {
+            await saveResult(testResult, 'AC', SCORE_FACTOR);
+          }
         }
       })();
       this.remains[gid]--;
