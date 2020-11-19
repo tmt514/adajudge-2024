@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import moment from 'moment';
 
 const RESULT_MAP = {
     'PE': 'Presentation Error',
@@ -20,6 +21,10 @@ export function toDisplayTime(result) {
     //if (result < 0.01) return '< 10 ms';
     if (result < 1) return `${result * 1000} ms`;
     return `${result} s`;
+}
+
+export function parseMongoTime(time) {
+    return moment(time).format('YYYY-MM-DD hh:mm:ss')
 }
 
 export function getResultString(sub, toHuman=true) {

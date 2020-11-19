@@ -159,11 +159,13 @@ export async function getProblemHighest(problemID) {
             $group: {
                 _id: '$submittedBy',
                 points: { $max: '$points' },
+                ts: { $min: '$ts' },
             },
         },
         {
             $sort: {
                 'points': -1,
+                'ts': 1
             },
         },
     ]);

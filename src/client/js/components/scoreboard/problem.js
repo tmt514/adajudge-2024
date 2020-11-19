@@ -18,10 +18,6 @@ export default Vue.extend({
     ready() {
         this.id = this.$route.params.id;
         this.fetchStatistic();
-        this.canvas = {
-            result: document.getElementById('result-chart'),
-            points: document.getElementById('points-chart'),
-        };
     },
     methods: {
         async fetchStatistic() {
