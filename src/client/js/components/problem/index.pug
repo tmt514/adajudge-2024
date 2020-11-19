@@ -8,6 +8,10 @@
         .ui.inverted.right.floated.header(style="margin-bottom: 5px; padding-top: 20px;")
           div.clear-after
             .hack
+            a( v-if="user && (user.isAdmin || user.isTA || problem.showScoreboard)"
+              v-link="{name: 'problem.scoreboard', params: {id: problem._id}}" ).ui.inverted.right.labeled.icon.red.button.spaced
+              i.list.icon
+              | Scoreboard
             a( v-if="user && (user.isAdmin || user.isTA || problem.showStatistic)"
               v-link="{name: 'problem.statistic', params: {id: problem._id}}" ).ui.inverted.right.labeled.icon.green.button.spaced
               i.area.chart.icon

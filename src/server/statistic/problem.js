@@ -134,6 +134,50 @@ export async function getProblemFastest(problemID) {
     return res;
 }
 
+export async function getProblemHighest(problemID) {
+    const _res = await Submission.aggregate([
+        {
+            $match: {
+                'problem': problemID,
+                'result': 'AC',
+            },
+        },
+        { 
+            $lookup: {
+                from: 'users',
+                localField: 'submittedBy',
+                foreignField: '_id',
+                as: '_user',
+            },
+        },
+        {
+            $match: {
+                '_user.roles': 'student',
+            },
+        },
+        {
+            $group: {
+                _id: '$submittedBy',
+                points: { $max: '$points' },
+            },
+        },
+        {
+            $sort: {
+                'points': -1,
+            },
+        },
+    ]);
+
+    const res = await Promise.all(_.map(_res, obj => (async () => {
+        return Submission.findOne()
+            .where('problem').equals(problemID)
+            .where('submittedBy').equals(obj._id)
+            .where('result').equals('AC')
+            .sort('points').populate('submittedBy', 'email meta');
+    })() ));
+    return res;
+}
+
 export async function getProblemAdminFastest(problemID) {
     const _res = await Submission.aggregate([
         {
