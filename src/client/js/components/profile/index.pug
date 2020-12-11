@@ -2,7 +2,7 @@
   .ui.inverted.segment
     form#profile-form.ui.inverted.form(method="POST")
       h4.ui.inverted.dividing.header User Info
-      .three.fields
+      .four.fields
         .field
           label ID
           input( readonly="" type="text", :value="user ? user.meta.id : ''" )
@@ -12,6 +12,9 @@
         .field
           label Role
           input( readonly="" type="text", :value="user ? getRole(user) : 'None'" )
+        .field
+          label Account Type
+          input( readonly="" type="text", :value="user ? user.accountType : ''" )
       .field
         label User email
         input( readonly="" type="text", :value="user ? user.email : ''" )
