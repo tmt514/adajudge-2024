@@ -20,6 +20,7 @@ router.get('/me', (req, res) => {
     user.roles = req.user.roles;
     user.email = req.user.email;
     user.homeworks = req.user.homeworks;
+    user.accountType = req.user.accountType;
     res.send({
       login: true,
       user: user
