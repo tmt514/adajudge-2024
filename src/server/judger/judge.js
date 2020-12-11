@@ -195,6 +195,10 @@ export default class Judger {
   }
 
   async compileUser (workers) {
+    if(this.problem.uploadOutput) {
+      logger.info('Output only');
+      return true;
+    }
     await this.compileTask(workers, this.generateUserCompileTask(), 'Judge error @ compileUser');
     return Boolean(this.userExec);
   }
@@ -216,25 +220,31 @@ export default class Judger {
         const [inp, outp] = ['in', 'out'].map(x => `${tdBase}.${x}`);
         const userTDir = path.join(isolateDir, worker_id.toString(), 'box');
         await copyToDir(inp, userTDir, 'prob.in', worker_id);
-        await copyToDir(this.userExec, userTDir, 'user', worker_id);
-
-        const userRes = await run(worker_id, 'user',
-          'prob.in', 'prob.out', 'prob.err',
-          this.problem.timeLimit, this.problem.memLimit);
-
-        testResult.runtime = userRes.time;
-        if (userRes.SE) {
-          await saveResult(testResult, 'SE');
-          return;
+        if(this.problem.uploadOutput) {
+          await copyToDir(this.userCpp, userTDir, 'prob.out', worker_id);
+          testResult.runtime = 0;
         }
-        if (userRes.RE || userRes.PE || userRes.FAIL) {
-          await saveResult(testResult, 'RE');
-          return;
-        }
-        if (userRes.TLE) {
-          testResult.runtime = this.problem.timeLimit;
-          await saveResult(testResult, 'TLE');
-          return;
+        if(!this.problem.uploadOutput) {
+          await copyToDir(this.userExec, userTDir, 'user', worker_id);
+
+          const userRes = await run(worker_id, 'user',
+            'prob.in', 'prob.out', 'prob.err',
+            this.problem.timeLimit, this.problem.memLimit);
+
+          testResult.runtime = userRes.time;
+          if (userRes.SE) {
+            await saveResult(testResult, 'SE');
+            return;
+          }
+          if (userRes.RE || userRes.PE || userRes.FAIL) {
+            await saveResult(testResult, 'RE');
+            return;
+          }
+          if (userRes.TLE) {
+            testResult.runtime = this.problem.timeLimit;
+            await saveResult(testResult, 'TLE');
+            return;
+          }
         }
 
         await copyToDir(outp, userTDir, 'prob.ans', worker_id);
