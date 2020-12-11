@@ -9,6 +9,11 @@ const schema = Schema({
     required: true,
     default: 'A Brand New Problem'
   },
+  problemType: {
+    type: String,
+    required: true,
+    default: 'User'
+  },
   visible: {
     type: Boolean,
     required: true,
@@ -31,6 +36,10 @@ const schema = Schema({
     default: false
   },
   hasPartialScorePerTestdata: {
+    type: Boolean,
+    default: false
+  },
+  uploadOutput: {
     type: Boolean,
     default: false
   },

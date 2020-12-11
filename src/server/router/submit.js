@@ -16,7 +16,7 @@ router.post('/:id', checkProblem(), requireLogin, wrap(async (req, res) => {
   const user = req.user;
   const probId = parseInt(req.params.id);
   let problem;
-  if (user && (user.isAdmin() || user.isTA())) { problem = await Problem.findOne({ _id: probId }); } else { problem = await Problem.findOne({ _id: probId, visible: true }); }
+  if (user && (user.isAdmin() || user.isTA())) { problem = await Problem.findOne({ _id: probId }); } else { problem = await Problem.findOne({ _id: probId, visible: true, problemType: user.accountType }); }
 
   if (!problem) {
     return res.status(500).send(`Problem #${req.params.id} not found.`);

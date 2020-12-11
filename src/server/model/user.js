@@ -13,6 +13,11 @@ const userSchema = Schema({
     type: String,
     required: true
   },
+  accountType: {
+    type: String,
+    required: true,
+    default: 'User'
+  },
   meta: {
     name: String,
     id: String
