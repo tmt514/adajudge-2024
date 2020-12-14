@@ -28,6 +28,9 @@ async function updateMeta (id, prob) {
   if (_.has(json, 'memLimit')) prob.memLimit = _.get(json, 'memLimit');
   // eslint-disable-next-line require-atomic-updates
   if (_.has(json, 'hasSpecialJudge')) prob.hasSpecialJudge = _.get(json, 'hasSpecialJudge');
+  if (_.has(json, 'uploadOutput')) prob.uploadOutput = _.get(json, 'uploadOutput');
+  if (_.has(json, 'problemType')) prob.problemType = _.get(json, 'problemType');
+  if (_.has(json, 'hasPartialScorePerTestdata')) prob.hasPartialScorePerTestdata = _.get(json, 'hasPartialScorePerTestdata');
   if (_.has(json, 'testdata')) {
     // eslint-disable-next-line require-atomic-updates
     prob.testdata = {
