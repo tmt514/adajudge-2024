@@ -43,6 +43,10 @@ const schema = Schema({
         type: Boolean,
         default: false,
     },
+    showScoreboard: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 schema.plugin(autoIncrement.plugin, 'Homework');

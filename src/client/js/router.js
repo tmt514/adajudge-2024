@@ -12,6 +12,7 @@ import Profile from './components/profile';
 import ProblemStatistic from './components/statistic/problem';
 import ProblemScoreboard from './components/scoreboard/problem';
 import HomeworkStatistic from './components/statistic/homework';
+import HomeworkScoreboard from './components/scoreboard/homework';
 
 Vue.use(VueRouter);
 
@@ -42,6 +43,10 @@ router.map({
     '/homework/:id/statistic': {
         name: 'homework.statistic',
         component: HomeworkStatistic,
+    },
+    '/homework/:id/scoreboard': {
+        name: 'homework.scoreboard',
+        component: HomeworkScoreboard,
     },
     '/submissions': {
         name: 'submissions',

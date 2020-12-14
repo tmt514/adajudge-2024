@@ -7,7 +7,7 @@
         .field
           label Name
           input(type="text" v-model="hw.name")
-        .two.fields
+        .three.fields
           .field
             .ui.inverted.toggle.checkbox
               input(type="checkbox" v-model="hw.visible")
@@ -16,6 +16,10 @@
             .ui.inverted.toggle.checkbox
               input(type="checkbox" v-model="hw.showStatistic")
               label Show statistic
+          .field
+            .ui.inverted.toggle.checkbox
+              input(type="checkbox" v-model="hw.showScoreboard")
+              label Show scoreboard
         .field
           label Due Time
           input(type="text" v-model="hw.due")
