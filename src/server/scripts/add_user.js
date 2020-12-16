@@ -15,6 +15,7 @@ const parser = new Parser({
 parser.addArgument(['email'], { help: 'account email' });
 parser.addArgument(['id'], { help: 'account id' });
 parser.addArgument(['name'], { help: 'account (chinese) name' });
+parser.addArgument(['type'], { help: 'account type, User or Group'});
 parser.addArgument(['role'], { nargs:'+', help: 'account role' });
 
 (async () => {
@@ -41,11 +42,13 @@ parser.addArgument(['role'], { nargs:'+', help: 'account role' });
 
   const randPass = randomString.generate(10);
   const hashed = await promisify(bcrypt.hash)(randPass, 10);
+  const accountType = args.type;
   const roles = args.role;
   const user = new User({
     email: args.email,
     password: hashed,
     roles: roles,
+    accountType: accountType,
     meta: {
       id: args.id,
       name: args.name
