@@ -91,7 +91,8 @@ const GPP = [
   '-std=c++17',
   '-march=native',
   '-static',
-  '-O2'
+  '-O2',
+  '-DONLINE_JUDGE'
 ];
 const GPPLink = [
 ];
