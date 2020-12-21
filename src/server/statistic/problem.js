@@ -175,7 +175,7 @@ export async function getProblemHighest(problemID) {
             .where('problem').equals(problemID)
             .where('submittedBy').equals(obj._id)
             .where('result').equals('AC')
-            .sort('points').populate('submittedBy', 'email meta');
+            .sort({'points': -1, 'ts': 1}).populate('submittedBy', 'email meta');
     })() ));
     return res;
 }
