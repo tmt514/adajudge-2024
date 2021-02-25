@@ -56,5 +56,26 @@ sudo cp isolate.conf /usr/local/etc/isolate
 ./start.sh
 
 ```
+
+# Misc
+
+## override semantic css
+/*******************************
+         Site Overrides
+*******************************/
+
+.ui.definition.table tr td.definition, .ui.definition.table > tbody > tr > td:first-child:not(.ignored), .ui.definition.table > tfoot > tr > td:first-child:not(.ignored), .ui.definition.table > tr > td:first-child:not(.ignored) {
+    background: rgba(0, 0, 0, .03);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 1);
+    text-transform: '';
+    -webkit-box-shadow: '';
+    box-shadow: '';
+    text-align: '';
+    font-size: 1em;
+    padding-left: '';
+    padding-right: ''
+}
+
 # Issue
 Kindly submit any issue you found on github.
