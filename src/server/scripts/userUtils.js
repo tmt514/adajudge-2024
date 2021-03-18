@@ -83,11 +83,11 @@ Here are your account and password.
 - Account: ${args.user}
 - Password: ${randPass}
 
-Head on to https://dsa.csie.org to try it !
+Head on to https://dsa-2021.csie.org to try it !
 ` );
 
     const mailOptions = {
-        from: '"DSA2020" <ta@dsa.csie.org>',
+        from: '"DSA2021" <dsa_ta@csie.ntu.edu.tw>',
         to: args.user,
         subject: 'Your DSA Judge Account',
         text,
@@ -126,13 +126,13 @@ const resetUser = async (args, transporter) => {
 
 - Password: ${randPass}
 
-Head on to https://dsa.csie.org and change it.
+Head on to https://dsa-2021.csie.org and change it.
 ` );
 
     const mailOptions = {
-        from: '"DSA2020" <ta@dsa.csie.org>',
+        from: '"DSA2021" <dsa_ta@csie.ntu.edu.tw>',
         to: args.user,
-        subject: `[DSA2020]Password of your DSA Judge Account has been reset`,
+        subject: `[DSA2021]Password of your DSA Judge Account has been reset`,
         text,
     };
 

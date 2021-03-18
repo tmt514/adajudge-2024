@@ -1,12 +1,13 @@
 import os
 import time
+import sys
 while True:
     pubs=os.listdir("gitosis-admin/keydir")
     f=open("gitosis-admin/gitosis.conf","w")
     f.write("[gitosis]\n\n")
     f.write("[group gitosis-admin]\n")
-    f.write("members = DSA-2020@mvnl-Infinity\n")
-    f.write("writable = gitosis-admin init\n\n")
+    f.write("members = DSA-2021@mvnl-Infinity\n")
+    f.write("writable = gitosis-admin init akihabara\n\n")
     for pub in pubs:
         if(pub.endswith(".pub")):
             name=pub[:-4]
@@ -14,7 +15,9 @@ while True:
             continue
         f.write("[group "+name+"]\n")
         f.write("members = "+name+"\n")
-        f.write("writable = "+name+"\n\n")
+        f.write("writable = "+name+"\n")
+        f.write("readonly = akihabara\n\n")
+    f.flush()
     f.close()
     os.system("git -C gitosis-admin add . >/dev/null")
     os.system("git -C gitosis-admin commit -m update >/dev/null")

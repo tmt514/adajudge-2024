@@ -1,3 +1,4 @@
+#!/bin/bash
 #/bin/bash
 #cd "$( dirname "${BASH_SOURCE[0]}" )"
 #DIR="$(cd -P "$(dirname "$0")" && pwd)"
@@ -26,4 +27,5 @@ tar -zcf $root_dir/semantic.src.tar.gz $semantic_src_dir
 tar -zcf $root_dir/apache2.config.tar.gz $apache2_config_dir
 cp $config_file $root_dir/
 #gdrive upload -r $root_dir
-gdrive sync upload $backup_dir 175ohpqrGDKRqNQc2GNVNu6m06iMSeOlj
+#gdrive sync upload $backup_dir 1qzkzIWOkdtf2B4CXwrqlsx3JaumFBVH6
+rclone sync $root_dir dsa2021_backup:dsajudge_backup/$DATE
