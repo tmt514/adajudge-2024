@@ -45,19 +45,19 @@ const resetUser = async (email, transporter) => {
   user.password = hashed;
   await user.save();
   const text = (
-    `Welcome to DSA2020, this email is to inform you that your DSA Judge account has been created.
+    `Welcome to DSA2021, this email is to inform you that your DSA Judge account has been created.
 Here is your account and temporary password. (You can change your password after logging in.)
 
 - Account: ${email}
 - Password: ${randPass}
 
-Head on to https://dsa.csie.org and try it!
+Head on to https://dsa-2021.csie.org and try it!
 `);
 
   const mailOptions = {
-    from: '"DSA2020" <ta@dsa.csie.org >',
+    from: '"DSA2021" <dsa_ta@csie.ntu.edu.tw>',
     to: email,
-    subject: '[DSA2020]Your DSA Judge Account',
+    subject: '[DSA2021]Your DSA Judge Account',
     text
   };
 
