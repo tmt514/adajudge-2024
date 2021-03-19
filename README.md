@@ -29,6 +29,7 @@ gulp init
 
 # Build semantic again...
 (cd semantic; gulp build)
+# Copy ./semantic to dist/static/semantic
 
 # Change src/server/config.js
 # example: config.example.js
@@ -51,6 +52,9 @@ ln -s ../../node_modules/mathjax/ dist/static/MathJax
 # Edit isolate config
 sudo mkdir /usr/local/etc
 sudo cp isolate.conf /usr/local/etc/isolate
+
+# Build gitosis from https://github.com/res0nat0r/gitosis at ./gitosis-admin
+# Copy /bin/cp to /home/git/cp with owner 'git' and set its set-user-id bit
 
 # Run server
 ./start.sh

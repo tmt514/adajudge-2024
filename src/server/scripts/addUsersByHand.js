@@ -45,16 +45,16 @@ const main = async () => {
         hidden: true
       },
       user_id: {
-	      required: true
+	required: true
       },
       user_name: {
-	      required: true
+	required: true
       },
       user_email: {
-	      required: true
+	required: true
       },
       user_role: {
-	      description: `"TA" or "admin" or "student"`
+	description: `"TA" or "admin" or "student"`
       }
     }
   });
@@ -93,7 +93,7 @@ const main = async () => {
       roles: [td[ROLE]]
     };*/
     
-	const td=[0,result.user_email, result.user_name, result.user_role, result.user_id]
+    const td=[0,result.user_email, result.user_name, result.user_role, result.user_id];
     console.log(td[EMAIL], td[ID], td[NAME], td[ROLE]);
     await newUser(td[EMAIL], td[ID], td[NAME], td[ROLE], mailTransporter);
   //}
