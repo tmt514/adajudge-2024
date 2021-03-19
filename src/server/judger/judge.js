@@ -80,7 +80,8 @@ const GCC = [
   'gcc',
   '-static',
   '-O2',
-  '-std=c11'
+  '-std=c11',
+  '-DONLINE_JUDGE'
 ];
 const GCCLink = [
   '-lm'
@@ -125,7 +126,8 @@ export default class Judger {
     return async (compileBoxId) => {
       await reset(compileBoxId);
       this.rootDir = path.join(isolateDir, compileBoxId.toString(), 'box');
-      await copyToDir(this.userCpp, this.rootDir, 'user.cpp', compileBoxId);
+      // await copyToDir(this.userCpp, this.rootDir, 'user.cpp', compileBoxId);
+      await copyToDir(this.userCpp, this.rootDir, 'user.c', compileBoxId);
       const exFile = this.problem.compileEXFile || [];
       for (const file of exFile) {
         await copyToDir(path.join(this.problemDir, file), this.rootDir, file, compileBoxId);
@@ -134,9 +136,12 @@ export default class Judger {
       for (const file of exHeader) {
         await copyToDir(path.join(this.problemDir, file), this.rootDir, file, compileBoxId);
       }
-      const linkArg = [].concat(GPPLink, this.problem.compileEXLink || []);
-      const gccArg = [].concat(GPP, this.problem.compileEXArg || []);
-      const files = [].concat('user.cpp', exFile);
+      // const linkArg = [].concat(GPPLink, this.problem.compileEXLink || []);
+      // const gccArg = [].concat(GPP, this.problem.compileEXArg || []);
+      // const files = [].concat('user.cpp', exFile);
+      const linkArg = [].concat(GCCLink, this.problem.compileEXLink || []);
+      const gccArg = [].concat(GCC, this.problem.compileEXArg || []);
+      const files = [].concat('user.c', exFile);
       const result = await compile(compileBoxId, files, 'user', gccArg, linkArg);
       if (result.RE || result.SE || result.TLE) {
         saveResult(this.result, 'CE');
@@ -197,8 +202,8 @@ export default class Judger {
 
   async compileUser (workers) {
     if(this.problem.uploadOutput) {
-      logger.info('Output only');
-      return true;
+        logger.info('Output only');
+        return true;
     }
     await this.compileTask(workers, this.generateUserCompileTask(), 'Judge error @ compileUser');
     return Boolean(this.userExec);
@@ -222,30 +227,31 @@ export default class Judger {
         const userTDir = path.join(isolateDir, worker_id.toString(), 'box');
         await copyToDir(inp, userTDir, 'prob.in', worker_id);
         if(this.problem.uploadOutput) {
-          await copyToDir(this.userCpp, userTDir, 'prob.out', worker_id);
-          testResult.runtime = 0;
+            await copyToDir(this.userCpp, userTDir, 'prob.out', worker_id);
+            testResult.runtime = 0;
         }
-        if(!this.problem.uploadOutput) {
-          await copyToDir(this.userExec, userTDir, 'user', worker_id);
+        else {
+            await copyToDir(this.userExec, userTDir, 'user', worker_id);
+        }
 
-          const userRes = await run(worker_id, 'user',
-            'prob.in', 'prob.out', 'prob.err',
-            this.problem.timeLimit, this.problem.memLimit);
+        const userRes = await run(worker_id, 'user',
+          'prob.in', 'prob.out', 'prob.err',
+          this.problem.timeLimit, this.problem.memLimit);
 
-          testResult.runtime = userRes.time;
-          if (userRes.SE) {
-            await saveResult(testResult, 'SE');
-            return;
-          }
-          if (userRes.RE || userRes.PE || userRes.FAIL) {
-            await saveResult(testResult, 'RE');
-            return;
-          }
-          if (userRes.TLE) {
-            testResult.runtime = this.problem.timeLimit;
-            await saveResult(testResult, 'TLE');
-            return;
-          }
+        testResult.runtime = userRes.time;
+        if (userRes.SE) {
+          await saveResult(testResult, 'SE');
+          return;
+        }
+        // if (userRes.RE || userRes.PE || userRes.FAIL) {
+        if (userRes.RE) {
+          await saveResult(testResult, 'RE');
+          return;
+        }
+        if (userRes.TLE) {
+          testResult.runtime = this.problem.timeLimit;
+          await saveResult(testResult, 'TLE');
+          return;
         }
 
         await copyToDir(outp, userTDir, 'prob.ans', worker_id);
@@ -263,19 +269,19 @@ export default class Judger {
         if (checkerRes.TLE) {
           throw new Error('Judge Error: Checker TLE.');
         }
-        if (checkerRes.FAIL) {
-          throw new Error('Checker failed with exit code 3 (_fail)');
-        }
-        if (checkerRes.PE) {
-          await saveResult(testResult, 'PE');
-        } else if (checkerRes.RE || checkerRes.SE) {
+        // if (checkerRes.FAIL) {
+        //   throw new Error('Checker failed with exit code 3(_fail)');
+        // }
+        // if (checkerRes.PE) {
+        //   await saveResult(testResult, 'PE');
+        // } else if(checkerRes.RE || checkerRes.SE) {
+        if (checkerRes.RE || checkerRes.SE) {
           await saveResult(testResult, 'WA');
         } else {
-          if (this.problem.hasPartialScorePerTestdata) {
-            await saveResult(testResult, 'AC', parseFloat(checkerRes.out) * SCORE_FACTOR);
-          } else {
-            await saveResult(testResult, 'AC', SCORE_FACTOR);
-          }
+        // if (this.problem.hasPartialScorePerTestdata) {
+        //   await saveResult(testResult, 'AC', parseFloat(checkerRes.out) * SCORE_FACTOR);
+        // } else {
+          await saveResult(testResult, 'AC', SCORE_FACTOR);
         }
       })();
       this.remains[gid]--;

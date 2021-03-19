@@ -37,7 +37,7 @@
     .ui.inverted.segment
       h3.ui.inverted.dividing.header Settings
       form.ui.inverted.form
-        .three.fields
+        .four.fields
           .twelve.wide.field
             label Name
             input(type="text" v-model="problem.name") 
@@ -50,23 +50,27 @@
           .four.wide.field
             label Quota
             input(type="text" v-model="problem.quota") 
-        .four.fields
+        .five.fields
           .field
             .ui.inverted.toggle.checkbox
               input(type="checkbox" v-model="problem.visible")
               label Visible to non-admin
           .field
             .ui.inverted.toggle.checkbox
-              input(type="checkbox" v-model="problem.showStatistic")
-              label Show Statistic
+              input(type="checkbox" v-model="problem.notGitOnly")
+              label Allow submit without git
           .field
             .ui.inverted.toggle.checkbox
-              input(type="checkbox" v-model="problem.showScoreboard")
-              label Show Scoreboard
+              input(type="checkbox" v-model="problem.showStatistic")
+              label Show statistic
           .field
             .ui.inverted.toggle.checkbox
               input(type="checkbox" v-model="problem.showDetailSubtask")
               label Show Subtask
+          .field
+            .ui.inverted.toggle.checkbox
+              input(type="checkbox" v-model="problem.showScoreboard")
+              label Show Scoreboard
               
 
     .ui.inverted.segment.clear-after

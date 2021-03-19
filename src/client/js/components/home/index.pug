@@ -2,7 +2,7 @@
   .ui.inverted.segments( v-for="hw of homeworks" )
     .ui.inverted.segment
       h2.ui.inverted.heading 
-        .ui.inverted.ribbon.label( :class="[ {running: 'olive', ended: 'red', unpublished: 'black'}[hw.status] ]",
+        .ui.inverted.ribbon.label( :class="[ {running: 'teal', ended: 'red', unpublished: 'black'}[hw.status] ]",
           style="top: -2px;" )
           | {{ hw.status | capitalize }}
         | {{ hw.name }}
@@ -83,7 +83,7 @@
 component( v-else )
   .ui.inverted.masthead.center.aligned.segment
     .ui.inverted.text.container#main-header-out
-      h1.ui.inverted.olive.header#main-header.menu-font
+      h1.ui.inverted.teal.header#main-header.menu-font
         p
           i.terminal.icon
           | &nbsp;DSA JUDGE
@@ -94,7 +94,7 @@ component( v-else )
 component( v-if="user && !user.isAdmin && homeworks.length==0" )
   .ui.inverted.masthead.center.aligned.segment
     .ui.inverted.text.container#main-header-out
-      h1.ui.inverted.olive.header#main-header.menu-font
+      h1.ui.inverted.teal.header#main-header.menu-font
         p
           i.terminal.icon
           | &nbsp;DSA JUDGE

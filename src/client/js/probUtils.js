@@ -10,6 +10,7 @@ const RESULT_MAP = {
     'CE': 'Compile Error',
     'RE': 'Runtime Error',
     'SE': 'Security Error',
+    'GE': 'Git Error',
 };
 
 export function toHumanString(result) {

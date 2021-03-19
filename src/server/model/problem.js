@@ -29,9 +29,13 @@ const schema = Schema({
   },
   quota: {
     type: Number,
-    default: 20
+    default: 5
   },
   hasSpecialJudge: {
+    type: Boolean,
+    default: false
+  },
+  notGitOnly: {
     type: Boolean,
     default: false
   },
@@ -39,15 +43,15 @@ const schema = Schema({
     type: Boolean,
     default: false
   },
+  showStatistic: {
+    type: Boolean,
+    default: true
+  },
   uploadOutput: {
     type: Boolean,
     default: false
   },
   showScoreboard: {
-    type: Boolean,
-    default: false
-  },
-  showStatistic: {
     type: Boolean,
     default: true
   },
