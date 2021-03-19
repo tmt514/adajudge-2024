@@ -16,7 +16,7 @@
               v-link="{name: 'problem.statistic', params: {id: problem._id}}" ).ui.inverted.right.labeled.icon.green.button.spaced
               i.area.chart.icon
               | Statistic
-            a( v-if="user",
+            a( v-if="user && (user.isAdmin || problem.notGitOnly)",
               v-link="{name: 'submit', params: {id: problem._id}}" ).ui.inverted.right.labeled.icon.primary.button.spaced
               i.send.icon
               | Submit

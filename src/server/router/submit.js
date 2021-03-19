@@ -6,12 +6,12 @@ import wrap from 'express-async-wrap';
 import Problem from '/model/problem';
 import Submission from '/model/submission';
 import User from '/model/user';
-import { requireLogin, checkProblem } from '/utils';
+import { requireLogin, checkKey, checkProblem, requireKeyOrNotGit } from '/utils';
 import fs from 'fs-extra';
 
 const router = express.Router();
 
-router.post('/:id', checkProblem(), requireLogin, wrap(async (req, res) => {
+router.post('/:id', checkKey, checkProblem(), requireKeyOrNotGit, wrap(async (req, res) => {
   if (isNaN(req.params.id)) return res.status(404).send('id must be a number');
   const user = req.user;
   const probId = parseInt(req.params.id);
@@ -32,6 +32,7 @@ router.post('/:id', checkProblem(), requireLogin, wrap(async (req, res) => {
     submittedBy: user._id,
     status: 'pending',
     points: 0,
+    gitCommitHash: req.body.gitHash ? req.body.gitHash.toLowerCase() : null
   });
   await submission.save();
   const subId = submission._id;
