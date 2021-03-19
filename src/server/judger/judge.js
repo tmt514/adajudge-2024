@@ -53,11 +53,11 @@ function numaCp (cpu,mem,src,dst) {
 }
 
 async function copyToDir (file, dir, newName, boxId) {
-  try {
+  //try {
     await fs.stat(file);
-  } catch (e) {
-    throw new errors.io.FileNotFoundError(file);
-  }
+  //} catch (e) {
+  //  throw e;//errors.io.FileNotFoundError(file);
+  //}
 
   const newDir = path.join(dir, newName || path.basename(file));
   if(config.numa&&config.numaPool&&config.numaPool.length&&boxId!==undefined){

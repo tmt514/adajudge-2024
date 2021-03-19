@@ -9,7 +9,7 @@ import {promisify} from 'bluebird';
   console.log("this is password:", randPass);
   const roles = ['admin'];
   const user = new User({
-    email: 'admin@ada-judge.csie.ntu.edu.tw',
+    email: 'admin@dsa-2021.csie.org',
     password: hashed,
     roles: roles,
     meta: {
