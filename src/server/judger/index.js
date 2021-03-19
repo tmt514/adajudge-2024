@@ -85,7 +85,7 @@ async function mainLoop () {
       await sleep(1000);
       continue;
     }
-    if (count >= workers.length) {
+    if (count >= 1/*workers.length*/) {
       await sleep(100);
       continue;
     }
