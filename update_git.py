@@ -6,7 +6,7 @@ while True:
     f=open("gitosis-admin/gitosis.conf","w")
     f.write("[gitosis]\n\n")
     f.write("[group gitosis-admin]\n")
-    f.write("members = DSA-2021@mvnl-Infinity\n")
+    f.write("members = "+os.getlogin()+"@"+os.uname()[1]+"\n")
     f.write("writable = gitosis-admin init akihabara\n\n")
     for pub in pubs:
         if(pub.endswith(".pub")):
