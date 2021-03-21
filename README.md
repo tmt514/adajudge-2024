@@ -44,11 +44,11 @@ sudo apt install libseccomp-dev libseccomp2 seccomp libcap-dev asciidoc gcc g++ 
 # Install python2 setuptools
 
 # Build and copy isolate
-# sudo -H gulp isolate
-(cd isolate; make isolate)
-cp ./isolate/isolate dist/judger/
-sudo chown root:root dist/judger/isolate
-sudo chmod +s dist/judger/isolate
+gulp isolate # and enter sudo password
+# (cd isolate; make isolate)
+# cp ./isolate/isolate dist/judger/
+# sudo chown root:root dist/judger/isolate
+# sudo chmod +s dist/judger/isolate
 
 # Unzip fonts.tar.gz in dist/static
 tar xvf fonts.tar.gz -C dist/static/
@@ -91,6 +91,8 @@ sudo cp git/serve.py /usr/local/lib/python2.7/dist-packages/gitosis-0.2-py2.7.eg
 # Misc
 
 ## override semantic css
+file `semantic/src/site/collections/table.overrides`
+```
 /*******************************
          Site Overrides
 *******************************/
@@ -107,7 +109,19 @@ sudo cp git/serve.py /usr/local/lib/python2.7/dist-packages/gitosis-0.2-py2.7.eg
     padding-left: '';
     padding-right: ''
 }
+```
+
+## Title color
+
+DSA: teal
+ADA: olive
+
+In file `src/client/js/components/root/menu.pug`, the menu-font color:
+DSA: #6dffff
+ADA: #b5cc18
+
+If the website did not change after rebuild, delete the node_modules directory and reinstall and rebuild everything again.
 
 # Issue
 Kindly submit any issue you found on github.
-TODO: fix addUsersByHand.js
+TODO: fix addUsersByHand.js or use add_user.js
