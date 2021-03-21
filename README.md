@@ -71,6 +71,12 @@ git clone git@localhost:gitosis-admin.git
 # git config --global user.name "Your Name"
 # Copy /bin/cp to /home/git/cp with owner 'git' and set its set-user-id bit
 sudo cp /bin/cp /home/git/; sudo chown git:git /home/git/cp; sudo chmod +s /home/git/cp;
+# Initialize init git repository
+sudo cp -r git/init.git /home/git/repositories/
+sudo chown -R git:git /home/git/repositories/init.git
+sudo chmod 755 /home/git/repositories/init.git/hooks/*
+sudo cp git/serve.py /usr/local/lib/python2.7/dist-packages/gitosis-0.2-py2.7.egg/gitosis/
+# Install python(2) package 'requests' for all user (git)
 
 # Run server on port 3333
 ./start.sh
@@ -79,6 +85,7 @@ sudo cp /bin/cp /home/git/; sudo chown git:git /home/git/cp; sudo chmod +s /home
 
 # install apache2 server or nginx server and redirect connection to port 80 to http://localhost:3333/ and start the server
 # be aware that the default checker ./dist/cfiles/default_checker.cpp might get compile error due to the pragma tune
+# many judge_name, domain_name, email_address, ... need to be changed
 ```
 
 # Misc
@@ -103,3 +110,4 @@ sudo cp /bin/cp /home/git/; sudo chown git:git /home/git/cp; sudo chmod +s /home
 
 # Issue
 Kindly submit any issue you found on github.
+TODO: fix addUsersByHand.js
