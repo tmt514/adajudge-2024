@@ -1,5 +1,4 @@
-# ADA Judge
-https://ada-judge.csie.ntu.edu.tw
+# ADA Judge https://ada-judge.csie.ntu.edu.tw
 
 # Original Project
 https://github.com/bobogei81123/adajudge  
@@ -38,10 +37,10 @@ gulp init
 
 # Build
 gulp build
-ln -s $(pwd)/semantic/dist dist/static/semantic
+ln -s ../../semantic/dist dist/static/semantic
 
 # Install seccomp
-sudo apt install libseccomp-dev libseccomp2 seccomp libcap-dev asciidoc gcc g++ make python
+sudo apt install libseccomp-dev libseccomp2 seccomp libcap-dev asciidoc gcc g++ make python numactl
 # Install python2 setuptools
 
 # Build and copy isolate
@@ -79,6 +78,7 @@ sudo cp /bin/cp /home/git/; sudo chown git:git /home/git/cp; sudo chmod +s /home
 # forever list
 
 # install apache2 server or nginx server and redirect connection to port 80 to http://localhost:3333/ and start the server
+# be aware that the default checker ./dist/cfiles/default_checker.cpp might get compile error due to the pragma tune
 ```
 
 # Misc
