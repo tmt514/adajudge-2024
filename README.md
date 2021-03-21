@@ -34,8 +34,12 @@ gulp init
 
 # Change src/server/config.js
 # example: config.example.js
+# maximum number of numaPool: view by `numactl --hardware` command
+# maxWorkers: the maximum number of total workers
+# maxNodeWorkers: unknown
 
 # Build
+# be sure that the default checker src/server/cfiles/default_checker.cpp can be compiled successfully (pragma tune=native)
 gulp build
 ln -s ../../semantic/dist dist/static/semantic
 
@@ -66,11 +70,13 @@ sudo adduser --system --shell /bin/sh --gecos 'git version control' --group --di
 # Initialize gitosis
 sudo -H -u git gitosis-init < ~/.ssh/id_rsa.pub
 git clone git@localhost:gitosis-admin.git
+
 # Set git config
 # git config --global user.email "you@example.com"
 # git config --global user.name "Your Name"
 # Copy /bin/cp to /home/git/cp with owner 'git' and set its set-user-id bit
 sudo cp /bin/cp /home/git/; sudo chown git:git /home/git/cp; sudo chmod +s /home/git/cp;
+
 # Initialize init git repository
 sudo cp -r git/init.git /home/git/repositories/
 sudo chown -R git:git /home/git/repositories/init.git
@@ -84,7 +90,6 @@ sudo cp git/serve.py /usr/local/lib/python2.7/dist-packages/gitosis-0.2-py2.7.eg
 # forever list
 
 # install apache2 server or nginx server and redirect connection to port 80 to http://localhost:3333/ and start the server
-# be aware that the default checker ./dist/cfiles/default_checker.cpp might get compile error due to the pragma tune
 # many judge_name, domain_name, email_address, ... need to be changed
 ```
 
