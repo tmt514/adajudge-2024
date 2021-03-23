@@ -126,6 +126,7 @@ DSA: #6dffff
 ADA: #b5cc18
 
 If the website did not change after rebuild, delete the node_modules directory and reinstall and rebuild everything again.
+Also, check if website caches are cleared.
 
 # Issue
 Kindly submit any issue you found on github.
