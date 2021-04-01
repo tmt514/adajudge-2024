@@ -25,7 +25,7 @@ export function toDisplayTime(result) {
 }
 
 export function parseMongoTime(time) {
-    return moment(time).format('YYYY-MM-DD hh:mm:ss')
+    return moment(time).format('YYYY-MM-DD HH:mm:ss')
 }
 
 export function getResultString(sub, toHuman=true) {
