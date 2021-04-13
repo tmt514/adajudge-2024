@@ -9,6 +9,7 @@ export async function updateProblemResult(submission) {
     const sub = (await Submission.find().limit(1)
         .where('submittedBy').equals(user)
         .where('problem').equals(problem)
+        .where('points').ne(0)
         .sort('-points ts'))[0];
     if (sub) {
         const res = await ProblemResult.findOneAndUpdate({
@@ -76,6 +77,7 @@ export async function lazyUpdateHomeworkResult(hw, submission) {
         .where('submittedBy').equals(user)
         .where('problem').equals(problem)
         .where('ts').lte(due)
+        .where('points').ne(0)
         .sort('-points ts'))[0];
 
     
@@ -109,6 +111,7 @@ export async function updateHomeworkResult(resObj) {
             .where('submittedBy').equals(user)
             .where('problem').equals(_prob.problem)
             .where('ts').lte(due)
+            .where('points').ne(0)
             .sort('-points ts'))[0];
 
         if (_.isNil(subObj)) resObj.subresults[idx] = null;

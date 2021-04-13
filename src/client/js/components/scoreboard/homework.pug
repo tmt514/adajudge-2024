@@ -28,12 +28,14 @@
             th.collapsing.center.aligned Rank
             th By
             th Score
+            th AC count
             th Last Submitted Time
         tbody
           tr( v-for="sub in (stats.highest?stats.highest:[])")
             td.collapsing.center.aligned {{ $index + 1 }}
             td {{ _.get(sub, 'user.meta.name', '') }} ({{ _.get(sub, 'user.meta.id') }})
             td {{ sub.points }}
+            td {{ sub.AC }}
             td {{ probUtils.parseMongoTime(sub.ts) }}
           
 
