@@ -67,11 +67,13 @@ export async function getHomeworkHighest(homeworkID) {
             $group: {
                 _id: '$user',
                 points: { $first: '$points' },
-                ts: { $first: '$ts' }
+                ts: { $first: '$ts' },
+                AC: { $first: '$AC' }
             },
         },
         {
             $sort: {
+                'AC': -1,
                 'points': -1,
                 'ts': 1
             }
@@ -82,7 +84,7 @@ export async function getHomeworkHighest(homeworkID) {
         return HomeworkResult.findOne()
             .where('homework').equals(homeworkID)
             .where('user').equals(obj._id)
-            .sort({'points': -1, 'ts': 1}).select({'ts': 1, 'points': 1, 'user': 1})
+            .sort({'AC': -1, 'points': -1, 'ts': 1}).select({'AC': 1, 'ts': 1, 'points': 1, 'user': 1})
             .populate('user', 'email meta');
     })() ));
     return res;

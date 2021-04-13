@@ -278,10 +278,11 @@ export default class Judger {
         if (checkerRes.RE || checkerRes.SE) {
           await saveResult(testResult, 'WA');
         } else {
-        // if (this.problem.hasPartialScorePerTestdata) {
-        //   await saveResult(testResult, 'AC', parseFloat(checkerRes.out) * SCORE_FACTOR);
-        // } else {
-          await saveResult(testResult, 'AC', SCORE_FACTOR);
+          if (this.problem.hasPartialScorePerTestdata) {
+            await saveResult(testResult, 'AC', parseFloat(checkerRes.out));
+          } else {
+            await saveResult(testResult, 'AC', SCORE_FACTOR);
+          }
         }
       })();
       this.remains[gid]--;
@@ -292,7 +293,9 @@ export default class Judger {
           { result: 'AC', runtime: 0, points: SCORE_FACTOR }
         );
         _.assignIn(groupResult, _groupResult);
-        groupResult.points = groupResult.points * groupResult.maxPoints / SCORE_FACTOR;
+        if(!this.problem.hasPartialScorePerTestdata) {
+          groupResult.points = groupResult.points * groupResult.maxPoints / SCORE_FACTOR;
+        }
         await groupResult.save();
       }
     };
@@ -309,7 +312,9 @@ export default class Judger {
           { result: 'AC', runtime: 0, points: SCORE_FACTOR }
         );
         _.assignIn(groupResult, _groupResult);
-        groupResult.points = groupResult.points * groupResult.maxPoints / SCORE_FACTOR;
+        if(!this.problem.hasPartialScorePerTestdata) {
+          groupResult.points = groupResult.points * groupResult.maxPoints / SCORE_FACTOR;
+        }
         await groupResult.save();
       }
     };
