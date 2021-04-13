@@ -1,8 +1,10 @@
 import _ from 'lodash';
 
 const resultComp = {
-    CE: 10000,
-    RE: 1000,
+    CE: 1000000,
+    SE: 100000,
+    RE: 10000,
+    PE: 1000,
     WA: 100,
     TLE: 10,
     AC: 0,

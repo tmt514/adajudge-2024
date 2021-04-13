@@ -34,7 +34,7 @@ export default Vue.extend({
             id: null,
             homeworks: [ ],
             problem: null,
-            stats: null,
+            stats: {},
         };
     },
     template: html,
@@ -69,7 +69,9 @@ export default Vue.extend({
                 TLE: [200, 0, 150],
                 CE: [0, 0, 255],
                 RE: [220, 100, 0],
+                SE: [150, 150, 150],
                 JE: [0, 0, 0],
+                PE: [204, 204, 0]
             };
             const [labelNames, color] = _.zip(..._.toPairs(labels));
             const backgroundColor = _.map(color, x => `rgba(${x[0]}, ${x[1]}, ${x[2]}, 0.6)`);

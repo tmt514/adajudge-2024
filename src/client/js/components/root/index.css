@@ -6,21 +6,26 @@
 }
 
 .top-menu {
-    background-color: white !important;
+    background-color: #2d2d2d !important;
 }
 
 #main-header {
-    margin-top: 10vh;
     font-size: 6rem !important;
 }
 
+#main-header-out {
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+}
+
 @media screen and (max-width: 767px) {
-    #main-header {
+    #main-header-out {
         margin-top: 0;
+        margin-bottom: 0;
     }
 }
 
-table.ui.table.selectable.pointer td {
+table.ui.inverted.table.selectable.pointer td {
     cursor: pointer;
 }
 
@@ -33,4 +38,81 @@ table.ui.table.selectable.pointer td {
 .blue-link {
     text-decoration: underline;
     color: #4183C4;
+}
+
+body{
+    background: #4a4a4a;
+}
+
+.ui.inverted.table tr.positive{
+    background: #282e28!important;
+    color: #a2e845!important;
+}
+
+.ui.inverted.table tr.negative{
+    background: #2e2020!important;
+    color: #fb7291!important;
+}
+
+.ui.inverted.table td.positive{
+    background: #282e28!important;
+    color: #a2e845!important;
+}
+
+.ui.inverted.table td.negative{
+    background: #2e2020!important;
+    color: #fb7291!important;
+}
+
+.ui.inverted.menu {
+    border: 0 solid transparent;
+    background: #1c1c1c;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.ui.inverted.menu .ui.dropdown .menu>.item {
+    color: rgba(255,255,255,.87)!important;
+}
+
+.ui.inverted.menu.menu .ui.dropdown .menu>.active.item {
+    background: rgba(255,255,255,.03)!important;
+    color: rgba(255,255,255,.95)!important;
+}
+
+.ui.inverted.toggle.checkbox input:checked~.box, .ui.inverted.toggle.checkbox input:checked~label {
+    color: rgba(255,255,255,.95)!important;
+}
+
+.ui.inverted.form input:not([type]), .ui.inverted.form input[type=date], .ui.inverted.form input[type=datetime-local], .ui.inverted.form input[type=email], .ui.inverted.form input[type=file], .ui.inverted.form input[type=number], .ui.inverted.form input[type=password], .ui.inverted.form input[type=search], .ui.inverted.form input[type=tel], .ui.inverted.form input[type=text], .ui.inverted.form input[type=time], .ui.inverted.form input[type=url] {
+    background: #2b2b2b;
+    border-color: rgba(255,255,255,.1);
+    color: rgba(255, 255, 255, 0.87);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.ui.inverted.selection.dropdown {
+    background: #2b2b2b;
+    color: rgba(255, 255, 255, 0.87);
+    border: 1px solid rgba(255,255,255,.1);
+}
+
+.ui.inverted.ui.inverted.selection.dropdown .ui.label {
+    background-color: #5a5a5a;
+    color: rgba(255,255,255,.6);
+}
+
+.ui.inverted.items>.item>.content>.header {
+    color: rgba(255,255,255,.85);
+}
+
+.ui.inverted.dropdown .menu{
+    background: #2b2b2b;
+}
+.ui.inverted.selection.dropdown .menu>.item {
+    border-top: 1px solid #fafafa00;
+}
+.ui.inverted.table tr td.disabled:not([class=disabled]), .ui.inverted.table tr.disabled td[class]:not(.disabled), .ui.inverted.table tr.disabled:not([class=disabled]) td, .ui.inverted.table tr:hover td.disabled:not([class=disabled]) {
+    color: rgba(255, 255, 255, 0.3);
 }

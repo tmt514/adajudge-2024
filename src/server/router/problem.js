@@ -6,84 +6,106 @@ import fs from 'fs-extra';
 import config from '/config';
 import path from 'path';
 import ProblemResult from '/model/problemResult';
-import {checkProblem} from '/utils';
+import { checkProblem } from '/utils';
 
 const router = express.Router();
 
 router.get('/', wrap(async (req, res) => {
-    const isTA = req.user && (req.user.isAdmin()||req.user.isTA());
-    let data = await Problem.find(isTA ? {} : {visible: true});
-    data = await Promise.all(data.map( _prob => (async () => {
-        let prob = _prob.toObject();
-        const pr = req.user ? 
-            await ProblemResult.findOne({
-                user: req.user,
-                problem: prob._id,
-            }) : 
-            null ;
-        if (pr) {
-            prob.userRes = {
-                AC: pr.AC,
-                points: pr.points,
-            };
-        } else {
-            prob.userRes = {
-                AC: false,
-                points: 0,
-            };
-        }
-        return prob;
-    })() ));
-    res.send(data);
+  const isUser = req.user;
+  const isTA = req.user && (req.user.isAdmin() || req.user.isTA());
+  const data = await Problem.aggregate([
+    { $match: isUser ? (isTA ? {} : { visible: true }) : { _id: -2 } }, // no problem has _id == -2 => can't see problem when not logged in
+    {
+      $project: {
+        _id: 1, quota: 1, name: 1, visible: 1
+      }
+    },
+    ...(req.user ? [{
+      $lookup: {
+        from: ProblemResult.collection.name,
+        as: 'userRes',
+        let: { id: '$_id' },
+        pipeline: [
+          {
+            $match: {
+              user: req.user._id,
+              $expr: {
+                $eq: ['$$id', '$problem']
+              }
+            }
+          }, {
+            $limit: 1
+          }
+        ]
+      }
+    }] : []),
+    {
+      $unwind: {
+        path: '$userRes',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        quota: 1,
+        name: 1,
+        visible: 1,
+        userRes: { $ifNull: ['$userRes', { AC: false, points: 0 }] }
+      }
+    },
+    { $project: { _id: 1, 'userRes.AC': 1, 'userRes.points': 1, quota: 1, name: 1, visible: 1 } }
+  ]).sort('_id');
+  res.send(data);
 }));
 
 router.get('/:id', wrap(async (req, res) => {
-    if(isNaN(req.params.id))return res.status(400).send(`id must be a number`);
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) return res.sendStatus(404);
-    let problem;
-    if (req.user && (req.user.isAdmin()||req.user.isTA()) )
-        problem = await Problem.findOne({_id: id});
-    else
-        problem = await Problem.findOne({_id: id, visible: true});
+  if (isNaN(req.params.id)) return res.status(400).send('id must be a number');
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) return res.sendStatus(404);
+  let problem;
+  if (req.user) {
+    if (req.user.isAdmin() || req.user.isTA()) problem = await Problem.findOne({ _id: id });
+    else problem = await Problem.findOne({ _id: id, visible: true });
+  } else {
+    return res.sendStatus(404); // can't view problem when not logged in
+  }
 
-    if (!problem) {
-        return res.sendStatus(404);
-    }
+  if (!problem) {
+    return res.sendStatus(404);
+  }
 
-    problem = problem.toObject();
+  problem = problem.toObject();
 
-    try {
-        let fl = await fs.readFile(
-            path.join(config.dirs.problems, req.params.id, 'prob.md')
-        );
-    
-        problem.desc = fl.toString();
-    
-    } catch(e) {
-        problem.desc = "";
-    }
+  try {
+    const fl = await fs.readFile(
+      path.join(config.dirs.problems, req.params.id, 'prob.md')
+    );
 
-    res.send(problem);
+    problem.desc = fl.toString();
+  } catch (e) {
+    problem.desc = '';
+  }
+
+  res.send(problem);
 }));
 
-router.get('/:id/assets/:path', 
-    checkProblem(),
-    wrap(async (req, res) => {
-    if(isNaN(req.params.id))return res.status(400).send(`id must be a number`);
+router.get('/:id/assets/:path',
+  checkProblem(),
+  wrap(async (req, res) => {
+    if (isNaN(req.params.id)) return res.status(400).send('id must be a number');
 
     const pathname = req.params.path;
-    if (!pathname || !pathname.match(/^[A-Za-z.0-9]+$/))
-        return res.sendStatus(404);
+    if (!pathname || !pathname.match(/^[A-Za-z.0-9]+$/)) { return res.sendStatus(404); }
 
     const filepath = path.join(config.dirs.problems, `${req.params.id}`, 'assets', pathname);
     try {
-        await fs.access(filepath, fs.constants.R_OK);
+      await fs.access(filepath, fs.constants.R_OK);
     } catch (e) {
-        return res.sendStatus(404);
+      return res.sendStatus(404);
     }
 
     res.sendFile(filepath);
-}));
+  }));
 
 export default router;

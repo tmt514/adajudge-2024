@@ -62,6 +62,11 @@ export default Vue.extend({
             this.filter.user = user.meta.id;
             await this.queryChanged();
         },
+        async changeProbID(pid) {
+            this.curTabId = 0;
+            this.filter.probID = pid;
+            await this.queryChanged();
+        },
         async rejudge(id) {
             let result;
             try {
@@ -72,6 +77,32 @@ export default Vue.extend({
                 return;
             }
             toastr.success(result.body);
+            this.getSubmissions();
+        },
+        async rejudgeSubmissions(pageId) {
+            let result;
+            const params = { skipPage: pageId };
+            const filter = this.filter;
+            if (filter.result != 'ALL') params.result = filter.result;
+            if (filter.probID) params.probID = filter.probID;
+            if (filter.user) params.user = filter.user;
+            try {
+                result = await this.$http.get('/admin/submission/', { params });
+            } catch(e) {
+                console.log(e);
+                return;
+            }
+
+            toastr.success(`${result.data.length} submissions rejudged`);
+
+            for (let i = 0 ; i < result.data.length ; i++) {
+                try {
+                    await this.$http.get(`/admin/submission/${result.data[i]._id}/rejudge`);
+                } catch(e) {
+                    if (e.body) toastr.error(e.body);
+                    else console.log(e);
+                }
+            }
             this.getSubmissions();
         },
         async queryChanged() {

@@ -1,12 +1,15 @@
 import _ from 'lodash';
+import moment from 'moment';
 
 const RESULT_MAP = {
+    'PE': 'Presentation Error',
     'JE': 'Judge Error',
     'TLE': 'Time Limit Exceeded',
     'WA': 'Wrong Answer',
     'AC': 'Accepted',
     'CE': 'Compile Error',
     'RE': 'Runtime Error',
+    'SE': 'Security Error',
     'GE': 'Git Error',
 };
 
@@ -19,6 +22,10 @@ export function toDisplayTime(result) {
     //if (result < 0.01) return '< 10 ms';
     if (result < 1) return `${result * 1000} ms`;
     return `${result} s`;
+}
+
+export function parseMongoTime(time) {
+    return moment(time).format('YYYY-MM-DD HH:mm:ss')
 }
 
 export function getResultString(sub, toHuman=true) {
