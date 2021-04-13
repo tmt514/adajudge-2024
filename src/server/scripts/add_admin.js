@@ -1,17 +1,21 @@
 import './common';
 import User from '/model/user';
 import bcrypt from 'bcrypt';
+import randomString from 'randomstring';
 import {promisify} from 'bluebird';
-
-const hashed = bcrypt.hash('this is password', 10);
-const roles = ['admin','student'];
-const user = new User({
-    email: "admin@abc.com",
+(async () => {
+  const randPass = randomString.generate(10);
+  const hashed = await promisify(bcrypt.hash)(randPass, 10);
+  console.log("this is password:", randPass);
+  const roles = ['admin'];
+  const user = new User({
+    email: 'admin@dsa-2021.csie.org',
     password: hashed,
     roles: roles,
     meta: {
-        id:0,
-        name: "Admin"
-    },
-});
-user.save();
+      id: 'admin',
+      name: 'Admin'
+    }
+  });
+  await user.save();
+})();

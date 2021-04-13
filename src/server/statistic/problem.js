@@ -37,9 +37,18 @@ export async function getProblemResultStats(problemID) {
 export async function getProblemResultBucket(problemID) {
     const res = await Submission.aggregate([
         {
+            $lookup: {
+                from: 'users',
+                localField: 'submittedBy',
+                foreignField: '_id',
+                as: '_user',
+            },
+        },
+        {
             $match: {
-                'status': { $nin: ['pending', 'judging'] },
                 'problem': problemID,
+                '_user.roles': 'student',
+                'status': { $nin: ['pending', 'judging'] },
             },
         },
         {
@@ -121,6 +130,52 @@ export async function getProblemFastest(problemID) {
             .where('submittedBy').equals(obj._id)
             .where('result').equals('AC')
             .sort('runtime').populate('submittedBy', 'email meta');
+    })() ));
+    return res;
+}
+
+export async function getProblemHighest(problemID) {
+    const _res = await Submission.aggregate([
+        {
+            $match: {
+                'problem': problemID,
+                'result': 'AC',
+            },
+        },
+        { 
+            $lookup: {
+                from: 'users',
+                localField: 'submittedBy',
+                foreignField: '_id',
+                as: '_user',
+            },
+        },
+        {
+            $match: {
+                '_user.roles': 'student',
+            },
+        },
+        {
+            $group: {
+                _id: '$submittedBy',
+                points: { $max: '$points' },
+                ts: { $min: '$ts' },
+            },
+        },
+        {
+            $sort: {
+                'points': -1,
+                'ts': 1
+            },
+        },
+    ]);
+
+    const res = await Promise.all(_.map(_res, obj => (async () => {
+        return Submission.findOne()
+            .where('problem').equals(problemID)
+            .where('submittedBy').equals(obj._id)
+            .where('result').equals('AC')
+            .sort({'points': -1, 'ts': 1}).populate('submittedBy', 'email meta');
     })() ));
     return res;
 }

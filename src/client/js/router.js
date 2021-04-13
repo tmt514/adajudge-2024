@@ -6,10 +6,13 @@ import Submit from './components/submit';
 import Admin from './components/admin';
 import Submissions from './components/submissions';
 import Submission from './components/submission';
+import Diff from './components/diff';
 import Home from './components/home';
 import Profile from './components/profile';
 import ProblemStatistic from './components/statistic/problem';
+import ProblemScoreboard from './components/scoreboard/problem';
 import HomeworkStatistic from './components/statistic/homework';
+import HomeworkScoreboard from './components/scoreboard/homework';
 
 Vue.use(VueRouter);
 
@@ -33,9 +36,17 @@ router.map({
         name: 'problem.statistic',
         component: ProblemStatistic,
     },
+    '/problem/:id/scoreboard': {
+        name: 'problem.scoreboard',
+        component: ProblemScoreboard,
+    },
     '/homework/:id/statistic': {
         name: 'homework.statistic',
         component: HomeworkStatistic,
+    },
+    '/homework/:id/scoreboard': {
+        name: 'homework.scoreboard',
+        component: HomeworkScoreboard,
     },
     '/submissions': {
         name: 'submissions',
@@ -44,6 +55,10 @@ router.map({
     '/submission/:id': {
         name: 'submission',
         component: Submission,
+    },
+    '/diff/:id/:id2': {
+        name: 'diff',
+        component: Diff,
     },
     '/submit/:id': {
         name: 'submit',

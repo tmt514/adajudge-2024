@@ -1,37 +1,37 @@
-.ui.text.container( v-if="user" )
-  .ui.segments( v-for="hw of homeworks" )
-    .ui.segment
-      h2.ui.heading 
-        .ui.ribbon.label( :class="[ {running: 'teal', ended: 'red', unpublished: 'black'}[hw.status] ]",
+.ui.inverted.text.container( v-if="user" )
+  .ui.inverted.segments( v-for="hw of homeworks" )
+    .ui.inverted.segment
+      h2.ui.inverted.heading 
+        .ui.inverted.ribbon.label( :class="[ {running: 'teal', ended: 'red', unpublished: 'black'}[hw.status] ]",
           style="top: -2px;" )
           | {{ hw.status | capitalize }}
         | {{ hw.name }}
 
-    .ui.segment
-      h3.ui.header Your statistic
-      .ui.stackable.three.column.grid
+    .ui.inverted.segment
+      h3.ui.inverted.header Your statistic
+      .ui.inverted.stackable.three.column.grid
         .column.center.aligned
-          .ui.statistic
+          .ui.inverted.statistic
             .value {{ hw.userPoints | toFixed 0 }}
               small(style='font-size: 40%; margin-left: 4px;') / {{ hw.totalPoints }}
             .label Points
         .column.center.aligned
-          .ui.statistic
+          .ui.inverted.statistic
             .value {{ hw.AC }}
               small(style='font-size: 40%; margin-left: 4px;') / {{ hw.problemNum }}
             .label Problems fully Accepted
         .column.center.aligned
-          .ui.statistic
+          .ui.inverted.statistic
             .value 
-              img.ui.inline.image( v-if="getRankImage(hw)", :src="getRankImage(hw)" )
+              img.ui.inverted.inline.image( v-if="getRankImage(hw)", :src="getRankImage(hw)" )
               i.angle.double.down.icon( v-if="!hw.rank" style="font-size: 70%; color: #555555;" )
               b( :class="[ getRankClass(hw) ]") {{ getRankStr(hw) }}
               small(style='font-size: 30%; margin-left: 4px;') / {{ hw.totUsers }}
             .label Rank
 
-    .ui.segment
-      h3.ui.header Information
-      table.ui.definition.table
+    .ui.inverted.segment
+      h3.ui.inverted.header Information
+      table.ui.inverted.definition.table
         tbody
           tr
             td.collapsing Due Date
@@ -40,35 +40,13 @@
             td.collapsing PDF link
             td 
               a(href="{{hw.meta.pdfLink}}") {{ hw.meta.pdfLink }}
-    .ui.segment
-      h3.ui.header Description
+    .ui.inverted.segment
+      h3.ui.inverted.header Description
       div( v-html="hw.desc | marked" )
       
-    .ui.segment
-      h3.ui.header Non Programming Problems
-      label.ui.icon.button( v-bind:for="'source-file'+hw._id" )
-        i.file.icon
-        | Choose File
-      input(type="file" v-model="filename[hw._id]" v-bind:id="'source-file'+hw._id")
-      span.filename-text {{ filename[hw._id] | getPath }}
-      a.ui.right.floated.labeled.icon.primary.button( v-on:click="clickSubmit(hw._id)" )
-        i.send.icon
-        | Upload
-      table.ui.definition.table(v-if="user && _.includes(_.map(user.homeworks,getHwId),hw._id)")
-        tbody
-          tr
-            td.collapsing File Name
-            td {{ user.homeworks[_.findIndex( _.map(user.homeworks,getHwId) , checkHwId(hw._id) )].file_name }}
-          tr
-            td.collapsing File Size
-            td {{ user.homeworks[_.findIndex( _.map(user.homeworks,getHwId) , checkHwId(hw._id) )].file_size }}
-          tr
-            td.collapsing SHA-1
-            td {{ user.homeworks[_.findIndex( _.map(user.homeworks,getHwId) , checkHwId(hw._id) )].file_sha1 }}
-
-    .ui.segment
-      h3.ui.header Programming Problems
-      table.ui.celled.table.selectable.pointer
+    .ui.inverted.segment
+      h3.ui.inverted.header Programming Problems
+      table.ui.inverted.celled.table.selectable.pointer
         thead
           tr
             th ID
@@ -84,38 +62,42 @@
             td {{ problem.userPoints }}
               small {{ ' ×' + problem.weight }} = {{ problem.weight * problem.userPoints }}
 
-    .ui.segment( v-if="user" )
-      a.ui.button.right.labeled.icon.green.button.spaced( v-if="user.isAdmin || user.isTA || hw.showStatistic"
+    .ui.inverted.segment( v-if="user" )
+      a.ui.inverted.button.right.labeled.icon.green.button.spaced( v-if="user.isAdmin || user.isTA || hw.showStatistic"
         v-link="{name: 'homework.statistic', params: {id: hw._id}}" )
         | Statistic
         i.area.chart.icon
-      a.ui.button.right.labeled.icon.orange.button( v-if="user.isAdmin"
+      a.ui.inverted.button.right.labeled.icon.red.button.spaced( v-if="user.isAdmin || user.isTA || hw.showScoreboard"
+        v-link="{name: 'homework.scoreboard', params: {id: hw._id}}" )
+        | Scoreboard
+        i.list.icon
+      a.ui.inverted.button.right.labeled.icon.orange.button( v-if="user.isAdmin"
         v-link="{name: 'admin.homework', params: {id: hw._id}}" )
         | Admin Page
         i.doctor.icon
 
-  .ui.fluid.right.labeled.icon.green.button( v-if="user && user.isAdmin" @click="newHomework" )
+  .ui.inverted.fluid.right.labeled.icon.green.button( v-if="user && user.isAdmin" @click="newHomework" )
     | Add New Homework
     i.add.icon
 
 component( v-else )
-  .ui.vertical.masthead.center.aligned.segment
-    .ui.text.container
-      h1.ui.teal.header#main-header.menu-font
+  .ui.inverted.masthead.center.aligned.segment
+    .ui.inverted.text.container#main-header-out
+      h1.ui.inverted.teal.header#main-header.menu-font
         p
-          i.cubes.icon
-          | DSA JUDGE
+          i.terminal.icon
+          | &nbsp;DSA JUDGE
           br
-          | 2018
-      h2.ui.teal.header.menu-font Login to begin...
+          | 2021
+      h2.ui.inverted.teal.header.menu-font Login to begin...
 
-component( v-if="user && homeworks.length==0" )
-  .ui.vertical.masthead.center.aligned.segment
-    .ui.text.container
-      h1.ui.teal.header#main-header.menu-font
+component( v-if="user && !user.isAdmin && homeworks.length==0" )
+  .ui.inverted.masthead.center.aligned.segment
+    .ui.inverted.text.container#main-header-out
+      h1.ui.inverted.teal.header#main-header.menu-font
         p
-          i.cubes.icon
-          | DSA JUDGE
+          i.terminal.icon
+          | &nbsp;DSA JUDGE
           br
-          | 2018
-      h2.ui.teal.header.menu-font No homework here...
+          | 2021
+      h2.ui.inverted.teal.header.menu-font No homework here...

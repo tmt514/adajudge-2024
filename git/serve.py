@@ -9,6 +9,7 @@ import logging
 import sys, os, re
 import requests
 import json
+import time
 from gitosis import access
 from gitosis import repository
 from gitosis import gitweb
@@ -56,6 +57,30 @@ class WriteAccessDenied(AccessDenied):
 class ReadAccessDenied(AccessDenied):
     """Repository read access denied"""
 
+def print_result(header="",status=None,points=None,tim=None):
+    out=header
+    if status:
+        if status=="AC":
+            out=out+"\033[92m"+status+"\033[0m"
+        elif status=="TLE":
+            out=out+"\033[93m"+status+"\033[0m"
+        elif status=="WA":
+            out=out+"\033[91m"+status+"\033[0m"
+        elif status=="RE":
+            out=out+"\033[95m"+status+"\033[0m"
+        elif status=="CE":
+            out=out+"\033[96m"+status+"\033[0m"
+        elif status=="pending" or status=="judging":
+            status="   "
+            out=out+status
+        else:
+            out=out+"\033[90m"+status+"\033[0m"
+    if status and points:
+        out=out+","+" "*(4-len(status))+"Points: \033[33m"+points+"\033[0m"
+    if status and tim:
+        out=out+","+" "*(4-len(status))+"  \033[94m"+tim+"\033[0m s"
+    print(out+"\033[K")
+
 def serve(
     cfg,
     user,
@@ -67,9 +92,62 @@ def serve(
     try:
         verb, args = command.split(None, 1)
     except ValueError:
+        try:
+            print("------------------------------------")
+            print "Hi, "+user+"!"
+            key_file=open(os.path.join("repositories",user+".git","hooks","key"),"r")
+            data={"key":key_file.read(),"gitHash":command}
+            key_file.close()
+            fin=False
+            while not fin:
+                fin=True
+                r = requests.post("https://dsa-2021.csie.org/submission/get/gitHash",json=data)
+                print("\033[s------------------------------------\033[K")
+                line=1
+                try:
+                    results=json.loads(r.content)
+                    for result in results:
+                        print(result["problem"]["name"].encode("utf-8")+"\033[K")
+                        line+=1
+                        print("------------------------------------\033[K")
+                        line+=1
+                        pad=len(str(result["_id"]))
+                        print("Submission #"+str(result["_id"])+":\033[K")
+                        line+=1
+                        if result["status"] != "finished":
+                            print(" Status: \033[96m"+result["status"]+"\033[0m\033[K")
+                            line+=1
+                            fin=False
+                        else:
+                            print_result(" "*pad+"Final Result: ",result["result"],"%3d"%(result["points"]))
+                            line+=1
+                        if "_result" in result and result["_result"] and "subresults" in result["_result"] and result["_result"]["subresults"]:
+                            for grp, sb in enumerate(result["_result"]["subresults"]):
+                                print_result(" "*pad+" "*(5-len(str(grp)))+"Group #"+str(grp)+": ",sb.get("result") or "   ","%3d"%(sb.get("points") or 0))
+                                line+=1
+                                if "subresults" in sb and sb["subresults"]:
+                                    for sb2 in sb["subresults"]:
+                                        print_result(" "*pad+"     Subtask: ",sb2.get("result") or "   ",None,"%7.3f"%(sb2.get("runtime") or 0))
+                                        line+=1
+                except:
+                    print("\033[91m"+r.content+"\033[0m\033[K")
+                    line+=1
+                    fin=True
+                print("------------------------------------\033[K")
+                line+=1
+                if not fin:
+                    sys.stdout.flush()
+                    time.sleep(1)
+                    print("\033["+str(line+1)+"A")
+            sys.exit(0)
+        except:
+            #pass
+            #main_log.error('Need SSH_ORIGINAL_COMMAND in environment.')
+            sys.exit(0)
+        sys.exit(0)
         # all known "git-foo" commands take one argument; improve
         # if/when needed
-        raise UnknownCommandError()
+        # raise UnknownCommandError()
 
     if verb == 'git':
         try:
@@ -171,26 +249,6 @@ class Main(app.App):
         parser.set_description(
             'Allow restricted git operations under DIR')
         return parser
-    def print_result(self,header="",status=None,points=None,tim=None):
-        out=header
-        if status:
-            if status=="AC":
-                out=out+"\033[92m"+status+"\033[0m"
-            elif status=="TLE":
-                out=out+"\033[93m"+status+"\033[0m"
-            elif status=="WA":
-                out=out+"\033[91m"+status+"\033[0m"
-            elif status=="RE":
-                out=out+"\033[95m"+status+"\033[0m"
-            elif status=="CE":
-                out=out+"\033[96m"+status+"\033[0m"
-            else:
-                out=out+"\033[90m"+status+"\033[0m"
-        if status and points:
-            out=out+","+" "*(4-len(status))+"Points: \033[33m"+points+"\033[0m"
-        if status and tim:
-            out=out+","+" "*(4-len(status))+" \033[94m"+tim+"\033[0m ms"
-        print out
 
     def handle_args(self, parser, cfg, options, args):
         try:
@@ -208,25 +266,47 @@ class Main(app.App):
                 key_file=open(os.path.join("repositories",args[0]+".git","hooks","key"),"r")
                 data={"key":key_file.read()}
                 key_file.close()
-                r = requests.post("https://dsa.csie.org/submission/get/last",json=data)
-                print("------------------------------------")
-                try:
-                    result=json.loads(r.content)
-                    print(result["problem"]["name"])
-                    print("------------------------------------")
-                    pad=len(str(result["_id"]))
-                    print("Submission #"+str(result["_id"])+":")
-                    if result["status"] != "finished":
-                        print("    \033[96m"+result["status"]+"\033[0m")
-                    else:
-                        self.print_result(" "*pad+"Final Result: ",result["result"],"%3d"%(result["points"]))
-                        for grp, sb in enumerate(result["_result"]["subresults"]):
-                            self.print_result(" "*pad+" "*(5-len(str(grp)))+"Group #"+str(grp)+": ",sb["result"],"%3d"%(sb["points"]))
-                            for sb2 in sb["subresults"]:
-                                self.print_result(" "*pad+"     Subtask: ",sb2["result"],None,"%7.3f"%(sb2["runtime"]))
-                except:
-                    print("\033[91m"+r.content+"\033[0m")
-                print("------------------------------------")
+                
+                fin=False
+                while not fin:
+                    fin=True
+                    r = requests.post("https://dsa-2021.csie.org/submission/get/last",json=data)
+                    print("------------------------------------\033[K")
+                    line=1
+                    try:
+                        result=json.loads(r.content)
+                        print(result["problem"]["name"].encode("utf-8")+"\033[K")
+                        line+=1
+                        print("------------------------------------\033[K")
+                        line+=1
+                        pad=len(str(result["_id"]))
+                        print("Submission #"+str(result["_id"])+":"+"\033[K")
+                        line+=1
+                        if result["status"] != "finished":
+                            print(" Status: \033[96m"+result["status"]+"\033[0m\033[K")
+                            line+=1
+                            fin=False
+                        else:
+                            print_result(" "*pad+"Final Result: ",result["result"],"%3d"%(result["points"]))
+                            line+=1
+                        if "_result" in result and result["_result"] and "subresults" in result["_result"] and result["_result"]["subresults"]:
+                            for grp, sb in enumerate(result["_result"]["subresults"]):
+                                print_result(" "*pad+" "*(5-len(str(grp)))+"Group #"+str(grp)+": ",sb.get("result") or "   ","%3d"%(sb.get("points") or 0))
+                                line+=1
+                                if "subresults" in sb and sb["subresults"]:
+                                    for sb2 in sb["subresults"]:
+                                        print_result(" "*pad+"     Subtask: ",sb2.get("result") or "   ",None,"%7.3f"%(sb2.get("runtime") or 0))
+                                        line+=1
+                    except:
+                        print("\033[91m"+r.content+"\033[0m\033[K")
+                        line+=1
+                        fin=True
+                    print("------------------------------------\033[K")
+                    line+=1
+                    if not fin:
+                        sys.stdout.flush()
+                        time.sleep(1)
+                        print("\033["+str(line+1)+"A")
                 sys.exit(0)
             except:
                 #pass

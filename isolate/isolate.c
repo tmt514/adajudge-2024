@@ -22,8 +22,10 @@
 #include <sys/time.h>
 #include <sys/vfs.h>
 #include <sys/wait.h>
+#include <sys/syscall.h>
 #include <time.h>
 #include <unistd.h>
+#include <seccomp.h>
 
 /* May not be defined in older glibc headers */
 #ifndef MS_PRIVATE
@@ -79,6 +81,7 @@ static char *redir_stdin, *redir_stdout, *redir_stderr;
 static int redir_stderr_to_stdout;
 static char *set_cwd;
 static int share_net;
+static int seccomp_on;
 static int inherit_fds;
 static int default_dirs = 1;
 
@@ -113,6 +116,7 @@ static int status_pipes[2];
 static int get_wall_time_ms(void);
 static int get_run_time_ms(struct rusage *rus);
 
+static scmp_filter_ctx seccomp_ctx = NULL;
 /*** Messages and exits ***/
 
 static void
@@ -627,6 +631,56 @@ setup_rlimits(void)
 
 #undef RLIM
 }
+static void setup_seccomp(char **args)
+{
+  int syscalls_whitelist[] = {SCMP_SYS(read), SCMP_SYS(fstat),
+                                  SCMP_SYS(mmap), SCMP_SYS(mprotect),
+                                  SCMP_SYS(munmap), SCMP_SYS(uname), SCMP_SYS(mremap),
+                                  SCMP_SYS(arch_prctl), SCMP_SYS(brk),
+                                  SCMP_SYS(access), SCMP_SYS(exit_group),
+                                  SCMP_SYS(close), SCMP_SYS(readlink),
+                                  SCMP_SYS(sysinfo), SCMP_SYS(write),
+                                  SCMP_SYS(writev), SCMP_SYS(lseek),
+                                  SCMP_SYS(clock_gettime), SCMP_SYS(futex),
+                                  SCMP_SYS(getpid), SCMP_SYS(gettid),
+                                  SCMP_SYS(rt_sigprocmask)};
+
+  int syscalls_whitelist_length = sizeof(syscalls_whitelist) / sizeof(int);
+  
+  // load seccomp rules
+  seccomp_ctx = seccomp_init(SCMP_ACT_KILL);
+  if (!seccomp_ctx) {
+      die("LOAD_SECCOMP_FAILED");
+  }
+  for (int i = 0; i < syscalls_whitelist_length; i++) {
+      if (seccomp_rule_add(seccomp_ctx, SCMP_ACT_ALLOW, syscalls_whitelist[i], 0) != 0) {
+      die("LOAD_SECCOMP_FAILED");
+      }
+  }
+  // add extra rule for tgkill
+  if (seccomp_rule_add(seccomp_ctx, SCMP_ACT_ALLOW, SCMP_SYS(tgkill), 3,
+                      SCMP_A0(SCMP_CMP_EQ, (scmp_datum_t)(syscall(SYS_getpid))),
+                      SCMP_A1(SCMP_CMP_EQ, (scmp_datum_t)(syscall(SYS_gettid))),
+                      SCMP_A2(SCMP_CMP_EQ, (scmp_datum_t)(SIGABRT))
+                      ) != 0) {
+      die("LOAD_SECCOMP_FAILED");
+  }
+  // add extra rule for execve
+  if (seccomp_rule_add(seccomp_ctx, SCMP_ACT_ALLOW, SCMP_SYS(execve), 1, SCMP_A0(SCMP_CMP_EQ, (scmp_datum_t)(args[0]))) != 0) {
+      die("LOAD_SECCOMP_FAILED");
+  }
+  // do not allow "w" and "rw"
+  if (seccomp_rule_add(seccomp_ctx, SCMP_ACT_ALLOW, SCMP_SYS(open), 1, SCMP_CMP(1, SCMP_CMP_MASKED_EQ, O_WRONLY | O_RDWR, 0)) != 0) {
+      die("LOAD_SECCOMP_FAILED");
+  }
+  if (seccomp_rule_add(seccomp_ctx, SCMP_ACT_ALLOW, SCMP_SYS(openat), 1, SCMP_CMP(2, SCMP_CMP_MASKED_EQ, O_WRONLY | O_RDWR, 0)) != 0) {
+      die("LOAD_SECCOMP_FAILED");
+  }
+  if (seccomp_load(seccomp_ctx) != 0) {
+      die("LOAD_SECCOMP_FAILED");
+  }
+  seccomp_release(seccomp_ctx);
+}
 
 static int
 box_inside(char **args)
@@ -637,10 +691,10 @@ box_inside(char **args)
   setup_credentials();
   setup_fds();
   char **env = setup_environment();
-
   if (set_cwd && chdir(set_cwd))
     die("chdir: %m");
-
+  if(seccomp_on)
+    setup_seccomp(args);
   execve(args[0], args, env);
   die("execve(\"%s\"): %m", args[0]);
 }
@@ -871,6 +925,7 @@ Options:\n\
 \t\t\t\tmaybe\tSkip the rule if <out> does not exist\n\
 \t\t\t\tnoexec\tDo not allow execution of binaries\n\
 \t\t\t\trw\tAllow read-write access\n\
+\t\t\t\ttmp\tCreate as a temporary directory (implies rw)\n\
 -D, --no-default-dirs\tDo not add default directory rules\n\
 -f, --fsize=<size>\tMax size (in KB) of files that can be created\n\
 -E, --env=<var>\t\tInherit the environment variable <var> from the parent process\n\
@@ -920,6 +975,7 @@ enum opt_code {
 static const char short_opts[] = "b:c:d:DeE:f:i:k:m:M:o:p::q:r:st:vw:x:";
 
 static const struct option long_opts[] = {
+  { "z-seccomp",		1, NULL, 'z' },
   { "box-id",		1, NULL, 'b' },
   { "chdir",		1, NULL, 'c' },
   { "cg",		0, NULL, OPT_CG },
@@ -954,6 +1010,19 @@ static const struct option long_opts[] = {
   { NULL,		0, NULL, 0 }
 };
 
+static unsigned int
+opt_uint(char *val)
+{
+  char *end;
+  errno = 0;
+  unsigned long int x = strtoul(val, &end, 10);
+  if (errno || end == val || end && *end)
+    usage("Invalid numeric parameter: %s\n", val);
+  if ((unsigned long int)(unsigned int) x != x)
+    usage("Numeric parameter out of range: %s\n", val);
+  return x;
+}
+
 int
 main(int argc, char **argv)
 {
@@ -967,8 +1036,11 @@ main(int argc, char **argv)
   while ((c = getopt_long(argc, argv, short_opts, long_opts, NULL)) >= 0)
     switch (c)
       {
+      case 'z':
+	seccomp_on = opt_uint(optarg);
+	break;
       case 'b':
-	box_id = atoi(optarg);
+	box_id = opt_uint(optarg);
 	break;
       case 'c':
 	set_cwd = optarg;
@@ -978,7 +1050,7 @@ main(int argc, char **argv)
 	break;
       case 'd':
 	if (!set_dir_action(optarg))
-	  usage("Invalid directory specified: %s\n", optarg);
+	  usage("Invalid directory rule specified: %s\n", optarg);
 	break;
       case 'D':
         default_dirs = 0;
@@ -991,16 +1063,16 @@ main(int argc, char **argv)
 	  usage("Invalid environment specified: %s\n", optarg);
 	break;
       case 'f':
-        fsize_limit = atoi(optarg);
+        fsize_limit = opt_uint(optarg);
         break;
       case 'k':
-	stack_limit = atoi(optarg);
+	stack_limit = opt_uint(optarg);
 	break;
       case 'i':
 	redir_stdin = optarg;
 	break;
       case 'm':
-	memory_limit = atoi(optarg);
+	memory_limit = opt_uint(optarg);
 	break;
       case 'M':
 	meta_open(optarg);
@@ -1010,7 +1082,7 @@ main(int argc, char **argv)
 	break;
       case 'p':
 	if (optarg)
-	  max_processes = atoi(optarg);
+	  max_processes = opt_uint(optarg);
 	else
 	  max_processes = 0;
 	break;
@@ -1018,8 +1090,8 @@ main(int argc, char **argv)
 	sep = strchr(optarg, ',');
 	if (!sep)
 	  usage("Invalid quota specified: %s\n", optarg);
-	block_quota = atoi(optarg);
-	inode_quota = atoi(sep+1);
+	block_quota = opt_uint(optarg);
+	inode_quota = opt_uint(sep+1);
 	break;
       case 'r':
 	redir_stderr = optarg;
@@ -1050,7 +1122,7 @@ main(int argc, char **argv)
 	  usage("Only one command is allowed.\n");
 	break;
       case OPT_CG_MEM:
-	cg_memory_limit = atoi(optarg);
+	cg_memory_limit = opt_uint(optarg);
 	require_cg = 1;
 	break;
       case OPT_CG_TIMING:

@@ -1,7 +1,7 @@
 import cluster from 'cluster';
 import config from './config';
 import 'source-map-support/register';
-import 'babel-polyfill';
+import '@babel/polyfill';
 import express from 'express';
 import auth from './auth';
 import bodyParser from 'body-parser';
@@ -13,12 +13,12 @@ import logger from './logger';
 import setRouter from './router';
 import judger from '/judger';
 
-mongoose.connect(config.mongo.url);
+mongoose.connect(config.mongo.url, { useNewUrlParser: true });
 mongoose.Promise = Promise;
 const MongoStore = require('connect-mongo')(expressSession); 
 const app = express();
 app.use('/static',express.static('static'));
-app.use(express.static('static'));
+app.use(express.static('static', { maxAge: '1h' }));
 app.use(cookieParser());
 app.use(expressSession({
     secret: config.secret,
@@ -31,8 +31,8 @@ app.use(expressSession({
         touchAfter: 3600,
     }),
 }));
-app.use(bodyParser.json({limit: '40mb'}));
-app.use(bodyParser.urlencoded({limit: '40mb',extended: true}));
+app.use(bodyParser.json({limit: '120mb'}));
+app.use(bodyParser.urlencoded({limit: '120mb',extended: true}));
 auth(app);
 setRouter(app);
     
