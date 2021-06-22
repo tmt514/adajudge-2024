@@ -90,6 +90,7 @@ sudo cp git/serve.py /usr/local/lib/python2.7/dist-packages/gitosis-0.2-py2.7.eg
 # forever list
 
 # install apache2 server or nginx server and redirect connection to port 80 to http://localhost:3333/ and start the server
+# install pymongo from pip3
 # many judge_name, domain_name, email_address, ... need to be changed
 ```
 

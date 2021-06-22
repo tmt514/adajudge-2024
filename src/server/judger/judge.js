@@ -269,13 +269,13 @@ export default class Judger {
         if (checkerRes.TLE) {
           throw new Error('Judge Error: Checker TLE.');
         }
-        // if (checkerRes.FAIL) {
-        //   throw new Error('Checker failed with exit code 3(_fail)');
-        // }
-        // if (checkerRes.PE) {
-        //   await saveResult(testResult, 'PE');
-        // } else if(checkerRes.RE || checkerRes.SE) {
-        if (checkerRes.RE || checkerRes.SE) {
+        if (checkerRes.FAIL) {
+          throw new Error('Checker failed with exit code 3(_fail)');
+        }
+        if (checkerRes.PE) {
+          await saveResult(testResult, 'WA');
+        } else if(checkerRes.RE || checkerRes.SE) {
+        // if (checkerRes.RE || checkerRes.SE) {
           await saveResult(testResult, 'WA');
         } else {
           if (this.problem.hasPartialScorePerTestdata) {
@@ -289,8 +289,8 @@ export default class Judger {
       if (!this.remains[gid]) {
         const _groupResult = _.reduce(
           this.testResults[gid],
-          resultReducer(),
-          { result: 'AC', runtime: 0, points: SCORE_FACTOR }
+          this.problem.hasPartialScorePerTestdata?resultReducer((x,y)=>x+y):resultReducer(),
+          { result: 'AC', runtime: 0, points: this.problem.hasPartialScorePerTestdata?0:SCORE_FACTOR }
         );
         _.assignIn(groupResult, _groupResult);
         if(!this.problem.hasPartialScorePerTestdata) {
@@ -308,8 +308,8 @@ export default class Judger {
       if (!this.remains[gid]) {
         const _groupResult = _.reduce(
           this.testResults[gid],
-          resultReducer(),
-          { result: 'AC', runtime: 0, points: SCORE_FACTOR }
+          this.problem.hasPartialScorePerTestdata?resultReducer((x,y)=>x+y):resultReducer(),
+          { result: 'AC', runtime: 0, points: this.problem.hasPartialScorePerTestdata?0:SCORE_FACTOR }
         );
         _.assignIn(groupResult, _groupResult);
         if(!this.problem.hasPartialScorePerTestdata) {

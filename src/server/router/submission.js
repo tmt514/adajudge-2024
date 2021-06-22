@@ -16,8 +16,13 @@ const router = express.Router();
 router.get('/', requireLogin, wrap(async (req, res) => {
   const skip = parseInt(req.query.start) || 0;
   const isTA = req.user && (req.user.isAdmin() || req.user.isTA());
+  var ids=req.user.groups;
+  if(!ids) ids=[];
+  ids=await Promise.all(ids.map(id => User.findOne({ "meta.id": id })));
+  ids=ids.filter(user => user!=null).map(user => user._id);
+  ids.push(req.user._id);
   const data = await Submission.aggregate([
-    { $match: { submittedBy: req.user._id } },
+    { $match: { submittedBy: { $in: ids }} },
     {
       $lookup: {
         from: Problem.collection.name,
@@ -100,8 +105,13 @@ router.get('/sourceCode/:id', requireLogin, wrap(async (req, res) => {
     ;
 
   if (!submission) return res.status(404).send(`Submission ${id} not found.`);
+  var ids=req.user.groups;
+  if(!ids) ids=[];
+  ids=await Promise.all(ids.map(id => User.findOne({ "meta.id": id })));
+  ids=ids.filter(user => user!=null).map(user => user._id);
+  ids.push(req.user._id);
   if (!(req.user && (req.user.isAdmin() || req.user.isTA())) &&
-        !((submission.submittedBy.equals(req.user._id) && submission.problem.visible && submission.problem.notGitOnly) || submission.problem.resource.includes('solution'))) {
+        !((ids.find(id => submission.submittedBy.equals(id)) && submission.problem.visible && submission.problem.notGitOnly) || submission.problem.resource.includes('solution'))) {
     return res.status(403).send('Permission denided.');
   }
   if (req.query.format) {
@@ -137,8 +147,13 @@ router.get('/:id', requireLogin, wrap(async (req, res) => {
       }
     });
   if (!submission) return res.status(404).send(`Submission ${id} not found.`);
+  var ids=req.user.groups;
+  if(!ids) ids=[];
+  ids=await Promise.all(ids.map(id => User.findOne({ "meta.id": id })));
+  ids=ids.filter(user => user!=null).map(user => user._id);
+  ids.push(req.user._id);
   if (!(req.user.isAdmin() || req.user.isTA()) &&
-        !((submission.submittedBy.equals(req.user._id) && submission.problem.visible) || submission.problem.resource.includes('solution'))) {
+        !((ids.find(id => submission.submittedBy.equals(id)) && submission.problem.visible) || submission.problem.resource.includes('solution'))) {
     return res.status(403).send('Permission denided.');
   }
 
@@ -166,8 +181,13 @@ router.get('/:id', requireLogin, wrap(async (req, res) => {
 
 router.post('/get/last', requireKey, wrap(async (req, res) => {
   const isTA = req.user && (req.user.isAdmin() || req.user.isTA());
+  var ids=req.user.groups;
+  if(1) ids=[];
+  //ids=await Promise.all(ids.map(id => User.findOne({ "meta.id": id })));
+  //ids=ids.map(user => user._id);
+  ids.push(req.user._id);
   let data = await Submission.aggregate([
-    { $match: { submittedBy: req.user._id } },
+    { $match: { submittedBy: { $in: ids }} },
     {
       $lookup: {
         from: Problem.collection.name,
@@ -226,10 +246,15 @@ router.post('/get/gitHash', requireKey, wrap(async (req, res) => {
   const isTA = user && (user.isAdmin() || user.isTA());
   const smallerHash = req.body.gitHash.toLowerCase();
   const biggerHash = smallerHash.substr(0, smallerHash.length - 1) + String.fromCharCode(smallerHash.charCodeAt(smallerHash.length - 1) + 1);
+  var ids=req.user.groups;
+  if(!ids) ids=[];
+  ids=await Promise.all(ids.map(id => User.findOne({ "meta.id": id })));
+  ids=ids.filter(user => user!=null).map(user => user._id);
+  ids.push(req.user._id);
   let data = await Submission.aggregate([
     {
       $match: {
-        submittedBy: req.user._id,
+        submittedBy: { $in: ids },
         gitCommitHash: {
           $gte: smallerHash,
           $lt: biggerHash

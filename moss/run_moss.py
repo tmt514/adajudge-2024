@@ -3,7 +3,7 @@ import os
 import sys
 import mosspy
 
-userid = 123456789 # fill your id here
+userid = 197118728 # fill your id here
 m = mosspy.Moss(userid, "cc")
 
 if len(sys.argv) < 2:
@@ -15,7 +15,9 @@ cpp = {}
 
 for f in os.listdir(fd):
     if '_' in f:
-        a, b = f.split('_')
+        tot = f.split('_')
+        a = '_'.join(tot[:-1])
+        b = tot[-1]
         if a not in cpp:
             cpp[a] = []
         cpp[a].append(b)
@@ -41,7 +43,7 @@ for k, v in cpp.items():
         m.addFile(f'{fd}/{k}_{v[0]}')
 print(cnt)
 
-url = m.send(lambda file_path, display_name: print('*', end='', flush=True))
+url = m.send(on_send=lambda file_path, display_name: print('*', end='', flush=True))
 print()
 print(url)
 print ("Report Url: " + url)

@@ -1,6 +1,10 @@
 import os
 import time
 import sys
+import pymongo
+client=pymongo.MongoClient('mongodb://localhost:27017/')
+db=client['dsajudge']
+users=db['users']
 while True:
     pubs=os.listdir("gitosis-admin/keydir")
     f=open("gitosis-admin/gitosis.conf","w")
@@ -17,6 +21,13 @@ while True:
         f.write("members = "+name+"\n")
         f.write("writable = "+name+"\n")
         f.write("readonly = akihabara\n\n")
+    for group in users.find({'accountType': 'Group'}):
+        gid=group['meta']['id']
+        members=[gid]+group['groups']
+        f.write('[group '+gid+']\n')
+        f.write('members = '+' '.join(members)+'\n')
+        f.write('writable = '+' '.join(members)+'\n')
+        f.write('readonly = akihabara\n\n')
     f.flush()
     f.close()
     os.system("git -C gitosis-admin add . >/dev/null")

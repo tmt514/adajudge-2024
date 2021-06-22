@@ -35,7 +35,8 @@ const userSchema = Schema({
     file_name: String,
     file_size: String,
     file_sha1: String
-  }]
+  }],
+  groups: [String]
 });
 
 userSchema.methods.hasRole = function (role) {

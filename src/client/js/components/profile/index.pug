@@ -13,8 +13,8 @@
           label Role
           input( readonly="" type="text", :value="user ? getRole(user) : 'None'" )
         .field
-          label Account Type
-          input( readonly="" type="text", :value="user ? user.accountType : ''" )
+          label Team ID
+          input( readonly="" type="text", :value="user&&user.groups&&user.groups.length>0 ? user.groups[0] : 'None' " )
       .field
         label User email
         input( readonly="" type="text", :value="user ? user.email : ''" )

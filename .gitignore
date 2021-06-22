@@ -4,3 +4,4 @@ node_modules/
 /semantic/
 .DS_store
 /src/server/config.js
+/moss/*/*

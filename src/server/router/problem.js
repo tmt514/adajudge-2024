@@ -1,5 +1,6 @@
 import express from 'express';
 import Problem from '/model/problem';
+import User from '/model/user';
 import wrap from 'express-async-wrap';
 import _ from 'lodash';
 import fs from 'fs-extra';
@@ -13,6 +14,11 @@ const router = express.Router();
 router.get('/', wrap(async (req, res) => {
   const isUser = req.user;
   const isTA = req.user && (req.user.isAdmin() || req.user.isTA());
+  var ids=req.user.groups;
+  if(!ids) ids=[];
+  ids=await Promise.all(ids.map(id => User.findOne({ "meta.id": id })));
+  ids=ids.filter(user => user!=null).map(user => user._id);
+  ids.push(req.user._id);
   const data = await Problem.aggregate([
     { $match: isUser ? (isTA ? {} : { visible: true }) : { _id: -2 } }, // no problem has _id == -2 => can't see problem when not logged in
     {
@@ -28,7 +34,7 @@ router.get('/', wrap(async (req, res) => {
         pipeline: [
           {
             $match: {
-              user: req.user._id,
+              user: { $in: ids},
               $expr: {
                 $eq: ['$$id', '$problem']
               }

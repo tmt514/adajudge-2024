@@ -43,17 +43,27 @@ parser.addArgument(['role'], { nargs:'+', help: 'account role' });
   const randPass = randomString.generate(10);
   const hashed = await promisify(bcrypt.hash)(randPass, 10);
   const accountType = args.type;
-  const roles = args.role;
-  const user = new User({
-    email: args.email,
-    password: hashed,
-    roles: roles,
-    accountType: accountType,
-    meta: {
-      id: args.id,
-      name: args.name
-    }
-  });
+  const roles = [args.role];
+
+  let user = await User.findOne({ email: args.email });
+
+  if(!user){
+    user = new User({
+      email: args.email,
+      password: hashed,
+      roles: roles,
+      accountType: accountType,
+      meta: {
+        id: args.id,
+        name: args.name
+      }
+    });
+  } else{
+    user.password=hashed;
+    user.roles=roles;
+    user.meta.id=args.id;
+    user.meta.name=args.name;
+  }
 
   if (result.sendMail === 'Y') {
     const smtpConfig = {

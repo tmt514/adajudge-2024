@@ -53,7 +53,7 @@ const schema = Schema({
   },
   showScoreboard: {
     type: Boolean,
-    default: true
+    default: false
   },
   showDetailSubtask: {
     type: Boolean,

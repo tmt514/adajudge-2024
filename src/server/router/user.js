@@ -38,6 +38,7 @@ router.get('/me', (req, res) => {
     user.ssh_key = req.user.ssh_key;
     user.homeworks = req.user.homeworks;
     user.accountType = req.user.accountType;
+    user.groups = req.user.groups;
     res.send({
       login: true,
       user: user
