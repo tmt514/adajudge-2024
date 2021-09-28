@@ -53,7 +53,7 @@ gulp build
 cp src/server/scripts/*.sh dist/scripts/; cp src/server/scripts/*.py dist/scripts/;
 
 # Build and copy isolate (and make sure `dist/judger/isolate` exists and has setuid and execute permission (rwsr-sr-x))
-gulp isolate # and enter sudo password, sometimes it fails to prompt for password, you may need to run the below commands manually
+gulp isolate # and enter sudo password, sometimes it fails to prompt for password, you may need to run the below commands manually (or perhaps run 'sudo echo hi' beforehand)
 # sudo rm -f isolate/isolate; sudo rm -f dist/judger/isolate;
 # (cd isolate; make isolate)
 # cp ./isolate/isolate dist/judger/
@@ -70,7 +70,7 @@ ln -s ../../node_modules/mathjax/ dist/static/MathJax
 # Edit isolate config
 sudo mkdir /usr/local/etc
 sudo cp isolate.conf /usr/local/etc/isolate
-# Modify isolate sandbox permission
+# Modify isolate sandbox permission if they exist
 sudo chown -R root:root /dev/shm/isolate
 sudo chmod 755 /dev/shm/isolate
 sudo chmod 755 /dev/shm/isolate/META
