@@ -73,7 +73,11 @@ const schema = Schema({
   compileEXArg: [String],
   compileEXHeader: [String],
   compileEXFile: [String],
-  compileEXLink: [String]
+  compileEXLink: [String],
+  compileEXArgForChecker: [String],
+  compileEXHeaderForChecker: [String],
+  compileEXFileForChecker: [String],
+  compileEXLinkForChecker: [String]
 });
 
 schema.plugin(autoIncrement.plugin, 'Problem');

@@ -60,6 +60,15 @@ async function updateMeta (id, prob) {
   if (_.has(json, 'compileEXFile')) prob.compileEXFile = _.get(json, 'compileEXFile');
   // eslint-disable-next-line require-atomic-updates
   if (_.has(json, 'compileEXLink')) prob.compileEXLink = _.get(json, 'compileEXLink');
+
+  // eslint-disable-next-line require-atomic-updates
+  if (_.has(json, 'compileEXArgForChecker')) prob.compileEXArgForChecker = _.get(json, 'compileEXArgForChecker');
+  // eslint-disable-next-line require-atomic-updates
+  if (_.has(json, 'compileEXHeaderForChecker')) prob.compileEXHeaderForChecker = _.get(json, 'compileEXHeaderForChecker');
+  // eslint-disable-next-line require-atomic-updates
+  if (_.has(json, 'compileEXFileForChecker')) prob.compileEXFileForChecker = _.get(json, 'compileEXFileForChecker');
+  // eslint-disable-next-line require-atomic-updates
+  if (_.has(json, 'compileEXLinkForChecker')) prob.compileEXLinkForChecker = _.get(json, 'compileEXLinkForChecker');
 }
 
 async function updateTestdata (id, prob) {

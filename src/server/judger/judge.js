@@ -165,8 +165,18 @@ export default class Judger {
       this.rootDir = path.join(isolateDir, compileBoxId.toString(), 'box');
       await copyToDir(this.checkerCpp, this.rootDir, 'checker.cpp', compileBoxId);
       await copyToDir(TESTLIB, this.rootDir, undefined, compileBoxId);
-
-      const result = await compile(compileBoxId, ['checker.cpp'], 'checker', GPP, GPPLink);
+      const exFile = this.problem.compileEXFileForChecker || [];
+      for (const file of exFile) {
+        await copyToDir(path.join(this.problemDir, file), this.rootDir, file, compileBoxId);
+      }
+      const exHeader = this.problem.compileEXHeaderForChecker || [];
+      for (const file of exHeader) {
+        await copyToDir(path.join(this.problemDir, file), this.rootDir, file, compileBoxId);
+      }
+      const linkArg = [].concat(GCCLink, this.problem.compileEXLinkForChecker || []);
+      const gccArg = [].concat(GCC, this.problem.compileEXArgForChecker || []);
+      const files = [].concat('checker.cpp', exFile);
+      const result = await compile(compileBoxId, files, 'checker', gccArg, linkArg);
       if (result.RE || result.SE || result.TLE) {
         throw Error('Judge Error: Checker Compiled Error.');
       }
