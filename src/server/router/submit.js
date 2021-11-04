@@ -26,6 +26,9 @@ router.post('/:id', checkKey, checkProblem(), requireKeyOrNotGit, wrap(async (re
   } else {
     return res.status(500).send(`Problem #${req.params.id} quota used up.`);
   }
+  if(req.body.file.length > 64*1024) {
+    return res.status(500).send('Code size exceed the limit of 64KB.');
+  }
 
   const submission = new Submission({
     problem: problem._id,
