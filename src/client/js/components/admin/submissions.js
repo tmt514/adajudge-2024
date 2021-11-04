@@ -80,6 +80,9 @@ export default Vue.extend({
             this.getSubmissions();
         },
         async rejudgeSubmissions(pageId) {
+            if (!confirm("Are you sure? Are you sure? Are you sure?")) {
+                return;
+            }
             let result;
             const params = { skipPage: pageId };
             const filter = this.filter;
