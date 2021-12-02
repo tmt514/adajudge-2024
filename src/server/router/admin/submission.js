@@ -49,6 +49,13 @@ router.get('/', wrap(async (req, res) => {
             query = query.where('problem').in(problem);
         else return res.send([]);
     }
+
+    if (req.query.score) {
+        let score = parseInt(req.query.score);
+        if (_.isNaN(score)) score = -1;
+        query = query.where('points').gte(score);
+    }
+
     const data = await query.populate('submittedBy', 'email meta').populate('problem', 'name').exec();
     res.send(data || []);
 }));
