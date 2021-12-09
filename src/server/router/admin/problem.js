@@ -179,7 +179,7 @@ router.post('/:id/rejudge', wrap(async (req, res) => {
     await Submission.update(
       {problem: req.params.id},
       {
-        $set: {'status': 'pending', 'result': null},
+        $set: {'status': 'pending-rejudge', 'result': null},
         $unset: {'runtime': ''}
       },
       {multi: true}

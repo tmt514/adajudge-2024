@@ -48,7 +48,7 @@ export async function getProblemResultBucket(problemID) {
             $match: {
                 'problem': problemID,
                 '_user.roles': 'student',
-                'status': { $nin: ['pending', 'judging'] },
+                'status': { $nin: ['pending', 'pending-rejudge', 'judging'] },
             },
         },
         {

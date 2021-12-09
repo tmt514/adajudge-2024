@@ -66,7 +66,7 @@ router.get('/:id/rejudge', wrap(async (req, res) => {
     let sub = await Submission.findOneAndUpdate(
       {'_id': req.params.id},
       {
-        $set: {'status': 'pending', 'result': null},
+        $set: {'status': 'pending-rejudge', 'result': null},
         $unset: {'runtime': ''}
       }
     );

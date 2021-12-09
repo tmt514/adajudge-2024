@@ -46,8 +46,8 @@ export default Vue.extend({
     async fetch () {
       await this.getSubmission();
 
-      while (this.submission.status === 'pending' || this.submission.status === 'judging' ||
-                this.submission2.status === 'pending' || this.submission2.status === 'judging') {
+      while (this.submission.status === 'pending' || this.submission.status == 'pending-rejudge' || this.submission.status === 'judging' ||
+                this.submission2.status === 'pending' || this.submission2.status == 'pending-rejudge' || this.submission2.status === 'judging') {
         await sleep(2000);
         await this.getSubmission();
       }
@@ -120,6 +120,7 @@ export default Vue.extend({
       this.submission = data;
       this.showResult = (this.submission &&
                 this.submission.status !== 'pending' &&
+	        this.submission.status !== 'pending-rejudge' &&
                 this.submission.result !== 'CE');
 
       const data2 = _result2.data;
@@ -145,12 +146,13 @@ export default Vue.extend({
       this.submission2 = data2;
       this.showResult2 = (this.submission2 &&
                 this.submission2.status !== 'pending' &&
+	        this.submission2.status !== 'pending-rejudge' &&
                 this.submission2.result !== 'CE');
     },
     async queryChanged () {
       await this.getSubmission();
-      while (this.submission.status === 'pending' || this.submission.status === 'judging' ||
-                this.submission2.status === 'pending' || this.submission2.status === 'judging') {
+      while (this.submission.status === 'pending' || this.submission.status === 'pending-rejudge' || this.submission.status === 'judging' ||
+                this.submission2.status === 'pending' || this.submission2.status === 'pending-rejudge' || this.submission2.status === 'judging') {
         await sleep(2000);
         await this.getSubmission();
       }

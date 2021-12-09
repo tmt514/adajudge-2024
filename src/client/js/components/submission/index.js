@@ -44,7 +44,7 @@ export default Vue.extend({
     async fetch () {
       await this.getSubmission();
 
-      while (this.submission.status === 'pending' || this.submission.status === 'judging') {
+      while (this.submission.status === 'pending' || this.submission.status === 'pending-rejudge' || this.submission.status === 'judging') {
         await sleep(2000);
         await this.getSubmission();
       }
@@ -97,6 +97,7 @@ export default Vue.extend({
       this.submission = data;
       this.showResult = (this.submission &&
                 this.submission.status !== 'pending' &&
+                this.submission.status !== 'pending-rejudge' &&
                 this.submission.result !== 'CE');
     }
   },

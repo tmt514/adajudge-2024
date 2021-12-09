@@ -77,10 +77,16 @@ async function mainLoop () {
     workers.push(new Worker(i));
   }
   while (true) {
-    const pending = await (
+    let pending = await (
       Submission.findOne({status: 'pending'})
         .populate('problem')
     );
+    if (!pending) {
+      pending = await (
+        Submission.findOne({status: 'pending-rejudge'})
+          .populate('problem')
+      );
+    }
     if (!pending) {
       await sleep(1000);
       continue;

@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 Vue.filter('toFormattedTime', (val, fmt) => moment(val).tz('Asia/Taipei').format(fmt));
 Vue.filter('toResultString', (val) => {
-    if (val === 'pending' || val === 'judging') return val;
+    if (val === 'pending' || val === 'pending-rejudge' || val === 'judging') return val;
     return {
         'PE': 'Presentation Error',
         'JE': 'Judge Error',

@@ -33,6 +33,7 @@ export function getResultString(sub, toHuman=true) {
         if (toHuman)
             return {
                 'pending': 'Pending',
+		'pending-rejudge': 'Pending',
                 'judging': 'Judging',
                 'error': 'Judge Error',
             }[sub.status];
