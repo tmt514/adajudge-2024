@@ -243,6 +243,10 @@ export default class Judger {
         else {
             await copyToDir(this.userExec, userTDir, 'user', worker_id);
         }
+        const exFile = this.problem.runtimeEXFile || [];
+        for (const file of exFile) {
+          await copyToDir(path.join(this.problemDir, file), userTDir, file, worker_id);
+        }
 
         const userRes = await run(worker_id, 'user',
           'prob.in', 'prob.out', 'prob.err',
