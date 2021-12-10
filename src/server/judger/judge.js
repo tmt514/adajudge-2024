@@ -173,8 +173,8 @@ export default class Judger {
       for (const file of exHeader) {
         await copyToDir(path.join(this.problemDir, file), this.rootDir, file, compileBoxId);
       }
-      const linkArg = [].concat(GCCLink, this.problem.compileEXLinkForChecker || []);
-      const gccArg = [].concat(GCC, this.problem.compileEXArgForChecker || []);
+      const linkArg = [].concat(GPPLink, this.problem.compileEXLinkForChecker || []);
+      const gccArg = [].concat(GPP, this.problem.compileEXArgForChecker || []);
       const files = [].concat('checker.cpp', exFile);
       const result = await compile(compileBoxId, files, 'checker', gccArg, linkArg);
       if (result.RE || result.SE || result.TLE) {
