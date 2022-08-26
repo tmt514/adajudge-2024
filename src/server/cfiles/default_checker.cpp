@@ -1,4 +1,5 @@
-#pragma GCC optimize("unroll-loops","omit-frame-pointer","inline","no-stack-protector")
+// #pragma GCC optimize("unroll-loops","omit-frame-pointer","inline","no-stack-protector")
+// #pragma GCC target "tune=native"
 #include "testlib.h"
 #include <string>
 #include <vector>

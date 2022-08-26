@@ -9,11 +9,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/cli": "^7.12.13",
-    "@babel/core": "^7.12.13",
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.5",
+    "@babel/node": "^7.15.4",
     "@babel/plugin-transform-strict-mode": "^7.12.13",
     "@babel/polyfill": "^7.12.1",
-    "@babel/preset-env": "^7.12.13",
+    "@babel/preset-env": "^7.15.6",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "babel-root-slash-import": "^1.1.0",
@@ -35,6 +36,7 @@
     "gulp-wait": "^0.0.2",
     "json-loader": "^0.5.7",
     "monaco-editor": "^0.18.0",
+    "nodemon": "^2.0.12",
     "postcss-cssnext": "^3.1.0",
     "postcss-loader": "^3.0.0",
     "precss": "^4.0.0",
@@ -105,7 +107,7 @@
     "vue-router": "^0.7.13",
     "vuex": "^1.0.1",
     "winston": "^3.3.3",
-    "xlsx": "^0.15.6",
+    "xlsx": "^0.17.1",
     "yamljs": "^0.3.0"
   }
 }

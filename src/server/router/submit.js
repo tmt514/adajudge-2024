@@ -8,6 +8,7 @@ import Submission from '/model/submission';
 import User from '/model/user';
 import { requireLogin, checkKey, checkProblem, requireKeyOrNotGit } from '/utils';
 import fs from 'fs-extra';
+import logger from '../logger';
 
 const router = express.Router();
 
