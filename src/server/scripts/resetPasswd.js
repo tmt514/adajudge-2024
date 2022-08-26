@@ -2,7 +2,7 @@
 
 require("./common");
 
-var _user = _interopRequireDefault(require("/home/ada2018/adajudge2021/dist/model/user"));
+var _user = _interopRequireDefault(require("/home/ada/adajudge2022/dist/model/user"));
 
 var _nodemailer = _interopRequireDefault(require("nodemailer"));
 
@@ -63,7 +63,7 @@ const resetUser = async (email, transporter) => {
   });
   user.password = hashed;
   await user.save();
-  const text = `Welcome to ADA2021, this email is to inform you that your ADA Judge account has been created.
+  const text = `Welcome to ADA2022, this email is to inform you that your ADA Judge account has been created.
 Here is your account and temporary password. (You can change your password after logging in.)
 
 - Account: ${email}
@@ -72,9 +72,9 @@ Here is your account and temporary password. (You can change your password after
 Head on to https://ada-judge.csie.ntu.edu.tw/ and try it!
 `;
   const mailOptions = {
-    from: '"ada2021" <ada-ta@csie.ntu.edu.tw>',
+    from: '"ada2022" <ada-ta@csie.ntu.edu.tw>',
     to: email,
-    subject: '[ADA2021] Your ADA Judge Account',
+    subject: '[ADA2022] Your ADA Judge Account',
     text
   };
   await new Promise((resolve, reject) => {

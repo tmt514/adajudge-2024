@@ -6,7 +6,7 @@ import Homework from '/model/homework';
 import Submission from '/model/submission';
 
 const parser = new Parser({
-  description: 'Copy submissions of problem id y in homework id x (exclude admin & TA) before deadline to /home/DSA-2021/dsajudge/moss/x_y/'
+  description: 'Copy submissions of problem id y in homework id x (exclude admin & TA) before deadline to /home/ada/adajudge2022/moss/x_y/'
 });
 
 parser.addArgument(['problem_id'], { type: 'int', help: 'id of the problem' });
@@ -49,7 +49,7 @@ parser.addArgument(['homework_id'], { type: 'int', help: 'id of the homework' })
     '$project': { '_id': 1, 'id': 1 }
   }]);
 
-  const folder = `/home/DSA-2021/dsajudge/moss/${args.homework_id}_${args.problem_id}`;
+  const folder = `/home/ada/adajudge2022/moss/${args.homework_id}_${args.problem_id}`;
   fs.mkdirSync(folder, { recursive: true }, (err) => { if (err) throw err; });
   for (let i = 0; i < submissions.length; i++) {
     fs.copyFileSync(`${config.dirs.submissions}/${submissions[i]._id}.cpp`, `${folder}/${submissions[i].id}_${submissions[i]._id}.cpp`, (err) => { if (err) throw err; });

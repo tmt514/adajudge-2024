@@ -77,7 +77,7 @@ const addUser = async (args, transporter) => {
 
 
     const text = (
-`Welcome to ADA2021, This email is just to inform you that your ADA Judge account is created.
+`Welcome to ADA2022, This email is just to inform you that your ADA Judge account is created.
 Here are your account and password.
 
 - Account: ${args.user}
@@ -87,9 +87,9 @@ Head on to https://ada-judge.csie.ntu.edu.tw/ to try it !
 ` );
 
     const mailOptions = {
-        from: '"ada2021" <ada-ta@csie.ntu.edu.tw>',
+        from: '"ada2022" <ada-ta@csie.ntu.edu.tw>',
         to: args.user,
-        subject: '[ADA2021] Your ADA Judge Account',
+        subject: '[ADA2022] Your ADA Judge Account',
         text,
     };
 
@@ -130,9 +130,9 @@ Head on to https://ada-judge.csie.ntu.edu.tw/ and change it.
 ` );
 
     const mailOptions = {
-        from: '"ada2021" <ada-ta@csie.ntu.edu.tw>',
+        from: '"ada2022" <ada-ta@csie.ntu.edu.tw>',
         to: args.user,
-        subject: `[ADA2021] Password of your ADA Judge Account has been reset`,
+        subject: `[ADA2022] Password of your ADA Judge Account has been reset`,
         text,
     };
 

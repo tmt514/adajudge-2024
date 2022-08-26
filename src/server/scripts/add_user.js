@@ -80,7 +80,7 @@ parser.addArgument(['role'], { nargs:'+', help: 'account role' });
     const mailTransporter = nodemailer.createTransport(smtpConfig);
 
     const text = (
-      `Welcome to ADA2021, this email is to inform you that your ADA Judge account has been created.
+      `Welcome to ADA2022, this email is to inform you that your ADA Judge account has been created.
   Here is your account and temporary password. (You can change your password after logging in.)
 
   - Account: ${args.email}
@@ -90,9 +90,9 @@ parser.addArgument(['role'], { nargs:'+', help: 'account role' });
   `);
 
     const mailOptions = {
-      from: '"ada2021" <ada-ta@csie.ntu.edu.tw >',
+      from: '"ada2022" <ada-ta@csie.ntu.edu.tw >',
       to: args.email,
-      subject: `[ADA2021] Your ADA Judge Account`,
+      subject: `[ADA2022] Your ADA Judge Account`,
       text
     };
     console.log(user);
