@@ -120,6 +120,9 @@ Head on to https://ada-judge.csie.ntu.edu.tw/ and try it!
     });
   });
 
+  // The rate limit is 20 mails per 1 minute
+  await new Promise(resolve => setTimeout(resolve, 3001));
+
   console.log(`User ${email} ${randPass} successfully added`);
 };
 
