@@ -49,6 +49,9 @@ const schema = Schema({
     },
 });
 
-schema.plugin(autoIncrement.plugin, 'Homework');
+schema.plugin(autoIncrement.plugin, {
+    model: 'Homework',
+    startAt: 1,
+});
 const Homework = mongoose.model('Homework', schema);
 export default Homework;

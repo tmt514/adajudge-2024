@@ -81,6 +81,9 @@ const schema = Schema({
   runtimeEXFile: [String]
 });
 
-schema.plugin(autoIncrement.plugin, 'Problem');
+schema.plugin(autoIncrement.plugin, {
+  model: 'Problem',
+  startAt: 1,
+});
 const Problem = mongoose.model('Problem', schema);
 export default Problem;
