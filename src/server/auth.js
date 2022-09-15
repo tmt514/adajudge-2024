@@ -59,10 +59,11 @@ export default (app) => {
     );
 
     app.post('/logout',
-        (req, res) => {
-            req.session.destroy();
-            req.logout();
-            res.sendStatus(203);
+        (req, res, next) => {
+            req.logout(function(err) {
+                if (err) { return next(err); }
+                res.sendStatus(203);
+            });
         } 
     );
 };
