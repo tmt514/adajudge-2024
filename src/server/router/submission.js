@@ -158,6 +158,19 @@ router.get('/:id', requireLogin, wrap(async (req, res) => {
   }
 
   submission = submission.toObject();
+  if (submission.status === 'pending') {
+    submission.queuePosition = await Submission.count(
+      { status: 'pending', _id: { $lt: submission._id } }
+    ) + 1
+  }
+  if (submission.status === 'pending-rejudge') {
+    submission.queuePosition = await Submission.count({
+      $or: [
+        { status: 'pending' },
+        { status: 'pending-rejudge', _id: { $lt: submission._id } }
+      ]
+    }) + 1
+  }
   if (submission.result === 'CE') {
     submission.compilationLog = await loadCompileErr(submission._id);
   }

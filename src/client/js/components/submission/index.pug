@@ -36,6 +36,9 @@
           tr
             td.collapsing Submission time
             td {{ submission.ts | toFormattedTime 'YYYY/MM/DD HH:mm:ss' }}
+          tr( v-if="!_.isNil(submission.queuePosition)" )
+            td.collapsing Queue Position
+            td {{ submission.queuePosition }}
           tr( v-if="!_.isNil(submission.runtime)" )
             td.collapsing Runtime
             td {{ probUtils.toDisplayTime(submission.runtime) }}
