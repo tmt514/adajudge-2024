@@ -23,6 +23,9 @@
 
       table.ui.inverted.definition.table
         tbody
+          tr.positive( v-if="!_.isNil(submission.queuePosition)" )
+            td.collapsing Queue Position
+            td {{ submission.queuePosition }}
           tr
             td.collapsing Problem name
             td {{ submission.problem.name }}
@@ -36,9 +39,6 @@
           tr
             td.collapsing Submission time
             td {{ submission.ts | toFormattedTime 'YYYY/MM/DD HH:mm:ss' }}
-          tr( v-if="!_.isNil(submission.queuePosition)" )
-            td.collapsing Queue Position
-            td {{ submission.queuePosition }}
           tr( v-if="!_.isNil(submission.runtime)" )
             td.collapsing Runtime
             td {{ probUtils.toDisplayTime(submission.runtime) }}
