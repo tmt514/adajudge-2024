@@ -79,11 +79,13 @@ async function mainLoop () {
   while (true) {
     let pending = await (
       Submission.findOne({status: 'pending'})
+        .sort("_id")
         .populate('problem')
     );
     if (!pending) {
       pending = await (
         Submission.findOne({status: 'pending-rejudge'})
+          .sort("_id")
           .populate('problem')
       );
     }
