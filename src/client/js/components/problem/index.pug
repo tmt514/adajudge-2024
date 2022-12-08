@@ -27,5 +27,6 @@
 
       .mathjax.markdown( v-html="problem.desc | marked" )
 
-      h2.ui.inverted.dividing.header Test Groups
-      .ui.inverted.multiple.progress#testgroup-bar(data-total="100",data-value="100")
+      component( v-if="problem.showTestGroupBar" )
+        h2.ui.inverted.dividing.header Test Groups
+        .ui.inverted.multiple.progress#testgroup-bar(data-total="100",data-value="100")

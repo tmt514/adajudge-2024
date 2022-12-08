@@ -59,6 +59,10 @@ const schema = Schema({
     type: Boolean,
     default: true
   },
+  showTestGroupBar: {
+    type: Boolean,
+    default: true
+  },
   testdata: {
     count: Number,
     points: Number,
