@@ -20,6 +20,9 @@ module.exports = {
     'app': './src/client/js/app'
   },
   plugins: [
+  	new webpack.IgnorePlugin({
+		resourceRegExp: /^@microsoft\/typescript-etw$/
+		})
   ],
   resolve: {
     alias: {
