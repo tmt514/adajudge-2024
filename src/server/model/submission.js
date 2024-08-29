@@ -37,7 +37,10 @@ schema.methods.populateResult = function() {
     ;
 };
 
-schema.plugin(autoIncrement.plugin, 'Submission');
+schema.plugin(autoIncrement.plugin, {
+    model: 'Submission',
+    startAt: 1,
+  });
 const Submission = mongoose.model('Submission', schema);
 export default Submission;
 

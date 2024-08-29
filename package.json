@@ -9,15 +9,16 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/cli": "^7.12.13",
-    "@babel/core": "^7.12.13",
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.5",
+    "@babel/node": "^7.15.4",
     "@babel/plugin-transform-strict-mode": "^7.12.13",
     "@babel/polyfill": "^7.12.1",
-    "@babel/preset-env": "^7.12.13",
+    "@babel/preset-env": "^7.15.6",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "babel-root-slash-import": "^1.1.0",
-    "browser-sync": "^2.26.14",
+    "browser-sync": "^2.27.10",
     "css-loader": "^3.6.0",
     "cssnano": "^4.1.10",
     "eslint": "^6.3.0",
@@ -35,6 +36,7 @@
     "gulp-wait": "^0.0.2",
     "json-loader": "^0.5.7",
     "monaco-editor": "^0.18.0",
+    "nodemon": "^2.0.19",
     "postcss-cssnext": "^3.1.0",
     "postcss-loader": "^3.0.0",
     "precss": "^4.0.0",
@@ -46,7 +48,7 @@
     "vue-html-loader": "^1.2.4",
     "vue-style-loader": "^4.1.2",
     "webpack": "^4.46.0",
-    "webpack-dev-server": "^3.11.2",
+    "webpack-dev-server": "^4.10.0",
     "webpack-stream": "^5.2.1"
   },
   "dependencies": {
@@ -87,7 +89,7 @@
     "mongoose-auto-increment": "^5.0.1",
     "multer": "^1.4.2",
     "nodemailer": "^6.4.17",
-    "passport": "^0.4.0",
+    "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "postcss-import": "^12.0.1",
     "prompt": "^1.1.0",
@@ -105,7 +107,7 @@
     "vue-router": "^0.7.13",
     "vuex": "^1.0.1",
     "winston": "^3.3.3",
-    "xlsx": "^0.15.6",
+    "xlsx": "^0.17.1",
     "yamljs": "^0.3.0"
   }
 }

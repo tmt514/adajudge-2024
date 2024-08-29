@@ -23,6 +23,9 @@
 
       table.ui.inverted.definition.table
         tbody
+          tr.positive( v-if="!_.isNil(submission.queuePosition)" )
+            td.collapsing Queue Position
+            td {{ submission.queuePosition }}
           tr
             td.collapsing Problem name
             td {{ submission.problem.name }}
@@ -88,6 +91,8 @@
                     td.collapsing {{ test.runtime }}
                     td.collapsing.center.aligned -
 
-  h2.ui.inverted.dividing.header( v-if="(user&&(user.isAdmin||user.isTA||submission.problem.notGitOnly))||submission.problem.resource.includes('solution')" ) Source Code
-  #editor( v-if="(user&&(user.isAdmin||user.isTA||submission.problem.notGitOnly))||submission.problem.resource.includes('solution')" )
+  // h2.ui.inverted.dividing.header( v-if="(user&&(user.isAdmin||user.isTA||submission.problem.notGitOnly))||submission.problem.resource.includes('solution')" ) Source Code
+  // #editor( v-if="(user&&(user.isAdmin||user.isTA||submission.problem.notGitOnly))||submission.problem.resource.includes('solution')" )
+  h2.ui.inverted.dividing.header( v-if="user" ) Source Code
+  #editor( v-if="user" )
 

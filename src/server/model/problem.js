@@ -29,7 +29,7 @@ const schema = Schema({
   },
   quota: {
     type: Number,
-    default: 5
+    default: 20
   },
   hasSpecialJudge: {
     type: Boolean,
@@ -37,7 +37,7 @@ const schema = Schema({
   },
   notGitOnly: {
     type: Boolean,
-    default: false
+    default: true
   },
   hasPartialScorePerTestdata: {
     type: Boolean,
@@ -56,6 +56,10 @@ const schema = Schema({
     default: false
   },
   showDetailSubtask: {
+    type: Boolean,
+    default: true
+  },
+  showTestGroupBar: {
     type: Boolean,
     default: true
   },
@@ -81,6 +85,9 @@ const schema = Schema({
   runtimeEXFile: [String]
 });
 
-schema.plugin(autoIncrement.plugin, 'Problem');
+schema.plugin(autoIncrement.plugin, {
+  model: 'Problem',
+  startAt: 1,
+});
 const Problem = mongoose.model('Problem', schema);
 export default Problem;

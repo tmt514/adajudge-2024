@@ -32,7 +32,7 @@ const CONFIG = {
     'homeworks',
     'gitosis-admin'
   ],
-  cfiles: 'src/server/cfiles'
+  cfiles: 'src/server/cfiles',
 };
 
 CONFIG.babel = {
