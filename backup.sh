@@ -12,7 +12,7 @@ problems_dir=./problems
 # git_dir=/home/git/repositories
 # gitosis_admin=./gitosis-admin
 mkdir -p $root_dir
-mongodump --archive=$root_dir/adajudge2021.${DATE}.gz --gzip --db adajudge2021
+mongodump --archive=$root_dir/adajudge2024.${DATE}.gz --gzip --db dsajudge
 tar -zcf $root_dir/submissions.tar.gz $submissions_dir
 tar -zcf $root_dir/homeworks.tar.gz $homeworks_dir
 # tar -zcf $root_dir/git.tar.gz $git_dir

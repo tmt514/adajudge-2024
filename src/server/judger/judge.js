@@ -124,6 +124,7 @@ export default class Judger {
 
   generateUserCompileTask () {
     return async (compileBoxId) => {
+		logger.info(`compileBoxId = ${compileBoxId}`);
       await reset(compileBoxId);
       this.rootDir = path.join(isolateDir, compileBoxId.toString(), 'box');
       await copyToDir(this.userCpp, this.rootDir, 'user.cpp', compileBoxId);
@@ -229,6 +230,7 @@ export default class Judger {
   generateTask (gid, groupResult, tid, testResult) {
     return async (worker_id) => {
       await (async () => {
+		logger.info(`reset worker id = ${worker_id}`);
         await reset(worker_id);
         const test = this.groups[gid].tests[tid];
         const tdBase = path.join(this.problemDir, 'testdata', test);

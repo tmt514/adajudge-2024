@@ -8,6 +8,7 @@ import {diffWords} from 'diff';
 import temp from 'temp';
 import {promisify} from 'bluebird';
 import {InvalidOperationError} from 'common-errors';
+import logger from '/logger';
 
 const ISOLATE = path.join(__dirname, 'isolate');
 
@@ -23,7 +24,10 @@ function isolateWrap (opt,boxId) {
         ["--cpubind="+cpu.toString(),"--membind="+mem.toString(),ISOLATE,...opt],
         {},
         (err, stdout, stderr) => {
-          // if (err) return reject(err);
+			console.log(err);
+			console.log(stdout);
+			console.log(stderr);
+          // if (err) return reject(err); // here
           resolve(
             _.assignIn({
               stdout,
@@ -38,7 +42,10 @@ function isolateWrap (opt,boxId) {
         opt,
         {},
         (err, stdout, stderr) => {
-          // if (err) return reject(err);
+			console.log(err);
+			console.log(stdout);
+			console.log(stderr);
+          // if (err) return reject(err); // here
           resolve(
             _.assignIn({
               stdout,
@@ -153,7 +160,7 @@ export async function run (worker_id, exec, inFile, outFile, errFile, timeLimit,
     memLimit = 1 << 20;
   }
   const opt = {
-    z: 1,
+    // z: 1,
     cg: true,
     'box-id': worker_id,
     meta: path.join(metaDir, worker_id.toString()),
