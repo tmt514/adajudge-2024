@@ -89,7 +89,7 @@ const GCCLink = [
 const GPP = [
   '/usr/bin/env',
   'g++',
-  '-std=c++20',
+  '-std=c++17',
   '-march=native',
   '-static',
   '-O2',
@@ -304,13 +304,16 @@ export default class Judger {
       if (!this.remains[gid]) {
         const _groupResult = _.reduce(
           this.testResults[gid],
-          this.problem.hasPartialScorePerTestdata?resultReducer((x,y)=>x+y):resultReducer(),
-          { result: 'AC', runtime: 0, points: this.problem.hasPartialScorePerTestdata?0:SCORE_FACTOR }
+          	// 2024-12-09: Hack
+			// this.problem.hasPartialScorePerTestdata?resultReducer((x,y)=>x+y):resultReducer(),
+          resultReducer(),
+          { result: 'AC', runtime: 0, points: SCORE_FACTOR }
+            // { result: 'AC', runtime: 0, points: this.problem.hasPartialScorePerTestdata?0:SCORE_FACTOR }
         );
         _.assignIn(groupResult, _groupResult);
-        if(!this.problem.hasPartialScorePerTestdata) {
-          groupResult.points = groupResult.points * groupResult.maxPoints / SCORE_FACTOR;
-        }
+        // if(!this.problem.hasPartialScorePerTestdata) {
+        groupResult.points = groupResult.points * groupResult.maxPoints / SCORE_FACTOR;
+        // }
         await groupResult.save();
       }
     };
@@ -323,13 +326,15 @@ export default class Judger {
       if (!this.remains[gid]) {
         const _groupResult = _.reduce(
           this.testResults[gid],
-          this.problem.hasPartialScorePerTestdata?resultReducer((x,y)=>x+y):resultReducer(),
-          { result: 'AC', runtime: 0, points: this.problem.hasPartialScorePerTestdata?0:SCORE_FACTOR }
+          // this.problem.hasPartialScorePerTestdata?resultReducer((x,y)=>x+y):resultReducer(),
+          resultReducer(),
+          { result: 'AC', runtime: 0, points: SCORE_FACTOR }
+          // { result: 'AC', runtime: 0, points: this.problem.hasPartialScorePerTestdata?0:SCORE_FACTOR }
         );
         _.assignIn(groupResult, _groupResult);
-        if(!this.problem.hasPartialScorePerTestdata) {
-          groupResult.points = groupResult.points * groupResult.maxPoints / SCORE_FACTOR;
-        }
+        // if(!this.problem.hasPartialScorePerTestdata) {
+        groupResult.points = groupResult.points * groupResult.maxPoints / SCORE_FACTOR;
+        // }
         await groupResult.save();
       }
     };
